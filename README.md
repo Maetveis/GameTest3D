@@ -1,7 +1,7 @@
 # GameTest3D
 The base of a homemade game-engine with opengl
-## Building
-# Requirements:
+# Building
+## Requirements:
   SLD2
   glew
   glm
