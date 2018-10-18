@@ -17,7 +17,7 @@ ifeq ($(OS),Windows_NT)
 else
 #$(CXX) $< -c $(CXXFLAGS) -I$(INCL) -o $@
 #$(CXX) $^ $(LDFLAGS) -L$(LIBDIR) $(LDLIBS) -o $(OUT)
-    INCL := 
+    INCL :=
     LDLIBS += -lGL -lGLEW
     MKDIR += -p
 endif
@@ -30,7 +30,7 @@ SRCS := Main/main.cpp Main/Game.cpp Main/ScaledDeltaTimer.cpp \
 	Scene/InGameScene.cpp \
 	Model/Mesh3D.cpp Model/WindowInfo.cpp Model/FrameParams.cpp Model/LightParams.cpp Model/MaterialParams.cpp \
 	Init/SDLInit.cpp Init/GlewInit.cpp \
-	Manager/WindowManager.cpp Manager/ShaderManager.cpp Manager/SceneManager.cpp Manager/ModelManager.cpp \
+	Manager/WindowManager.cpp Manager/SceneManager.cpp Manager/ModelManager.cpp \
 	Helper/ShaderProgram.cpp Helper/UniformBuffer.cpp \
 	Program/Mesh3DColor.cpp
 
@@ -47,12 +47,12 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp | $(BUILD_DIRS)
 
 $(OUT) : $(OBJS)
 	$(CXX) $^ $(LDFLAGS) $(LDLIBS) -o $(OUT)
-	
+
 $(BUILD_DIRS):
 	$(MKDIR) "$@"
-	
-clean : 
+
+clean :
 	-$(RM) "$(OUT)"
 	-$(RMDIR) "$(OBJDIR)"
-	
+
 -include $(OBJS:.o=.d)
