@@ -43,7 +43,7 @@ private:
 	glm::mat4 matModel;
 
 	//Mesh3DColor program;
-	Raycast program;
+	RaycastProgram program;
 
 	/*FrameParams frame;
 	LightParams light;*/
