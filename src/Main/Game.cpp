@@ -25,7 +25,7 @@ void Game::Run()
 			HandleEvents();
 			Update();
 			Render();
-			//DelayFrameTime(timer.GetFrameStart(), targetFPS);
+			DelayFrameTime(timer.GetFrameStart(), targetFPS);
 		}
 	}
 	Destroy();
@@ -35,20 +35,20 @@ bool Game::Init()
 {
 	if (!SDLInit::Init())
 		return false;
-	
+
 	if(!windowManager.Init())
 		return false;
-	
+
 	windowManager.SpawnWindow(WindowInfo());
-	
+
 	//Starting main Scene
 	sceneManager.AttachGame(this);
 	sceneManager.ChangeScene(std::make_unique<InGameScene>());
-	
+
 	//Starting delta timer
 	timer.SetScaleFactor(1);
 	timer.Start();
-	
+
 	return true;
 }
 
