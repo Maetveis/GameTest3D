@@ -12,17 +12,17 @@ RMDIR := rm -r
 MKDIR := mkdir
 
 ifeq ($(OS),Windows_NT)
+	OUT := bin/main.exe
 	LDLIBS += -lmingw32 -lopengl32 -lglew32
 	#LDFLAGS += -mwindows
 else
 #$(CXX) $< -c $(CXXFLAGS) -I$(INCL) -o $@
 #$(CXX) $^ $(LDFLAGS) -L$(LIBDIR) $(LDLIBS) -o $(OUT)
+	OUT := bin/main.run
     INCL :=
     LDLIBS += -lGL -lGLEW
     MKDIR += -p
 endif
-
-OUT := bin/main.exe
 
 #Render/RenderManager.cpp
 
