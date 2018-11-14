@@ -16,24 +16,24 @@ public:
 	}
 
 	void Init();
-	
+
 	void Destroy();
-	
+
 	void BufferData(const GLuint bytes, const void* data, const GLenum usage);
-	
+
 	template<typename T>
 	void BufferData(const T& data, const GLenum usage);
-	
+
 	template<typename T>
 	void BufferData(const std::vector<T>& data, const GLenum usage);
-	
+
 	void Bind(const ShaderProgram& program, const GLuint index) const;
-	
+
 	GLuint GetBlockBinding() const
 	{
 		return binding;
 	}
-	
+
 	GLuint GetBufferID() const
 	{
 		return uniformBufferID;

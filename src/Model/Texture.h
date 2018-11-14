@@ -2,54 +2,76 @@
 #define TEXTURE_H
 
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <string>
 
-#include "../Log/Logger.h"
+struct SDL_Surface;
 
 class Texture
 {
 public:
-	void Init(GLenum target)
+	Texture()
+	{
+	}
+
+	explicit Texture(GLenum target)
+	{
+		CreateName(target);
+	}
+
+	Texture(GLenum target, const SDL_Surface* surface) :
+		Texture(target)
+	{
+		FromSurface(surface);
+	}
+
+	Texture(GLenum target, const std::string fileName)
+	{
+		FromFile(target, fileName);
+	}
+
+	Texture(const Texture&) = delete;
+
+	Texture& operator=(const Texture&) = delete;
+
+	void FromFile(GLenum target, const std::string fileName);
+
+	void FromSurface(const SDL_Surface* surface, GLint level = 0);
+
+	void SetMinFilter(GLenum filter)
+	{
+		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, filter);
+	}
+
+	void SetMagFilter(GLenum filter)
+	{
+		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, filter);
+	}
+
+	void GenerateMipmap()
+	{
+		glGenerateTextureMipmap(textureID);
+	}
+
+	void SetName(GLuint name)
+	{
+		textureID = name;
+	}
+
+	GLuint GetName() const
+	{
+		return textureID;
+	}
+
+	void CreateName(GLenum target)
 	{
 		glCreateTextures(target, 1, &textureID);
 	}
-	
-	void FromFile(const char* fileName, GLenum target)
-	{
-		Init(target);
-		
-		SDL_Surface* loaded_img = IMG_Load(filename);
-		if(loaded_img == nullptr)
-		{
-			Logger::Error << "Failed to load Image: " << filename << '\n';
-			return;
-		}
-		Glint img_mode = 0;
-		
-		#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-		if (loaded_img->format->BytesPerPixel == 4)
-			img_mode = GL_RGBA;
-		else
-			img_mode = GL_RGB;
-		#else
-		if (loaded_img->format->BytesPerPixel == 4)
-			img_mode = GL_BGRA;
-		else
-			img_mode = GL_BGR;
-		#endif
-		
-		//glActiveTexture(GL_TEXTURE0);
-		glTextureStorage2D(textureID, 1, GL_RGBA, loaded_img->w, loaded_img->h);
-		
-		glTextureSubImage2D(textureID, 0, 0, 0, loaded_img->w, loaded_img->h, img_mode, GL_UNSIGNED_BYTE, loaded_img->pixels);
-	}
-	
+
 	void Bind(GLuint unit)
 	{
-		glBindTextureUnit(GL_TEXTURE0 + unit, texture);
+		glBindTextureUnit(GL_TEXTURE0 + unit, textureID);
 	}
-	
+
 	~Texture()
 	{
 		glDeleteTextures(1, &textureID);
