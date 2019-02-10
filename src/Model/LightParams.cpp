@@ -3,7 +3,6 @@
 
 void LightParams::Init()
 {
-	buffer.Init();
 }
 
 void LightParams::Update()

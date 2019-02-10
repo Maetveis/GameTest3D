@@ -5,13 +5,12 @@
 
 void FrameParams::Bind(const ShaderProgram& program)
 {
-	//Logger::Debug << program.GetUniformBlockIndex(blockName) << '\n';
+	Logger::Debug << "Fp " << blockName << " " << program.GetUniformBlockIndex(blockName) << '\n';
 	buffer.Bind(program, program.GetUniformBlockIndex(blockName));
 }
 
 void FrameParams::Init()
 {
-	buffer.Init();
 }
 
 void FrameParams::Update()

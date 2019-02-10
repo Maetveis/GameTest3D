@@ -10,14 +10,14 @@ class ShaderProgram;
 struct Light
 {
 	Light() = default;
-	
-	Light(const glm::vec3& p, const glm::vec3& c, float s) : 
+
+	Light(const glm::vec3& p, const glm::vec3& c, float s) :
 		pos(p),
 		color(c),
 		strength(s)
-	{	
+	{
 	}
-	
+
 	union alignas(16)
 	{
 		glm::vec3 pos;
@@ -34,11 +34,21 @@ public:
 	{
 		return data.lights;
 	}
-	
+
 	void Update();
-	
+
+	void SetCount(unsigned int count)
+	{
+		data.lightCount = count;
+	}
+
+	unsigned int GetCount()
+	{
+		return data.lightCount;
+	}
+
 	void Bind(const ShaderProgram& program);
-	
+
 	void Init();
 private:
 	static constexpr const char* blockName = "LightParams";
@@ -47,7 +57,7 @@ private:
 	struct Data
 	{
 		Light lights[10];
-		unsigned int lightCount;
+		unsigned int lightCount = 2;
 	};
 	Data data;
 };

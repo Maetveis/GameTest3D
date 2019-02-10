@@ -3,9 +3,9 @@
 
 #include "../Helper/ShaderProgram.h"
 #include "../Model/FrameParams.h"
-#include "../Model/MaterialParams.h"
+#include "../Model/Material/MaterialParams.h"
 #include "../Model/LightParams.h"
-#include "../Model/Mesh3D.h"
+#include "../Model/Mesh/Mesh3D.h"
 
 class Mesh3DColor
 {
@@ -44,12 +44,12 @@ public:
 		light.Update();
 	}
 
-	MaterialFormat& Material()
+	ColorFormat& Material()
 	{
 		return material.Data();
 	}
 
-	const MaterialFormat& Material() const
+	const ColorFormat& Material() const
 	{
 		return material.Data();
 	}

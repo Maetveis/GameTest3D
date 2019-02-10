@@ -3,7 +3,7 @@
 
 #include "Scene.h"
 #include "../Manager/ModelManager.h"
-#include "../Model/Mesh3D.h"
+#include "../Model/Mesh/Mesh3D.h"
 #include "../Program/Mesh3DColor.h"
 
 #include <SDL2/SDL.h>

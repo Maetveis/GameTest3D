@@ -3,7 +3,7 @@
 #include "../Log/Logger.h"
 #include "../Main/Game.h"
 #include "../Helper/UniformBuffer.h"
-#include "../Model/MaterialFormat.h"
+#include "../Model/Material/ColorFormat.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,63 +13,67 @@
 
 bool InGameScene::Begin()
 {
-	glClearColor(0.f, 0.05f, 0.3f, 1.f);
+	glClearColor(0., 0., 0., 1.);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
-	
+
 	//glEnable(GL_BLEND);
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
+
 	//glEnable( GL_POINT_SMOOTH );
 	//glPointSize( 10 );
-	
+
 	if(!LoadShaders())
 	{
 		Logger::Error << "Failed to load Shaders" << '\n';
 		return false;
 	}
-	
+
 	if(!LoadData())
 	{
 		Logger::Error << "Loading data failed" << '\n';
 		return false;
 	}
-	
+
 	Logger::Info << "RenderManager.Init() finished succesfully" << '\n'; //std::endl;
-	
+
 	return true;
 }
 
 bool InGameScene::LoadData()
 {
-	modelManager.ImportFile("../assets/alfa.obj", "iphone");
-	modelManager.ImportFile("../assets/cube.obj", "cube");
-	
+	if(!modelManager.ImportFile("../assets/alfa.obj", "iphone"))
+		return false;
+
+	if(!modelManager.ImportFile("../assets/cube.obj", "cube"))
+		return false;
+
 	return true;
 }
 
 bool InGameScene::LoadShaders()
 {
 	program.Init();
-	
+
 	Logger::Debug << "UniformLocation(model): " << (modelID = program.Program().GetUniformLocation("model")) << '\n';
-	
-	program.Material() = MaterialFormat(glm::vec3(.1, .1, .4), glm::vec3(0, 0, 1.), glm::vec3(0., .3, .8), 15.4);
-	
+
+	program.Material() = ColorFormat(glm::vec3(.1, .1, .4), glm::vec3(0, 0, 1.), glm::vec3(0., .3, .8), 15.4);
+
 	program.SetProj(glm::perspective(45.0f, 640/360.0f, 0.01f, 500.0f));
 	program.SetView(glm::lookAt(glm::vec3( 0.f,  1.f,  6.f), glm::vec3( 0,  0,  0), glm::vec3( 0,  1,  0)));
-	
+
 	program.Lights()[0] = Light(glm::vec3(1.0, 0.5, 0.2), glm::vec3(0, 1.0, 0.7), 10);
-	
+	program.Lights()[1] = Light(glm::vec3(2.0, 0.5, 0.2), glm::vec3(0.2, 0.5, 0.1), 50);
+
 	return true;
 }
 
 void InGameScene::Update(double deltaTime)
 {
 	time = SDL_GetTicks() / 300.0f;
-	
-	program.Lights()[0].strength = 30 * (0.5 * sin(time) + 0.5);
+
+	program.Lights()[0].strength = 30;
 }
 
 void InGameScene::End()
@@ -88,21 +92,21 @@ void InGameScene::Render()
 {
 	// Clear the screen and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	program.Use();
-	
+
 	program.Update();
-	
-	matModel = 
+
+	matModel =
 		glm::rotate(time * 0.002f, glm::vec3(0.f, 0.f, 1.f)) *
 		glm::rotate(time * 0.3f, glm::vec3(0.f, 1.f, 0.f)) *
 		glm::rotate(time * 0.1f, glm::vec3(1.f, 0.f, 0.f));
-		
+
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &(matModel[0][0]));
-	
+
 	modelManager.Get("iphone").DrawAll();
 	//modelManager.Get("cube").DrawAll();
-	
+
 	program.Unuse();
 }
 void InGameScene::OnQuit(SDL_QuitEvent& event)

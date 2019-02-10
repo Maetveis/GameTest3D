@@ -26,9 +26,10 @@ endif
 
 #Render/RenderManager.cpp
 
-SRCS := Main/main.cpp Main/Game.cpp Main/ScaledDeltaTimer.cpp \
+SRCS := DataStore/GPUAllocator.cpp \
+	Main/main.cpp Main/Game.cpp Main/ScaledDeltaTimer.cpp \
 	Scene/InGameScene.cpp \
-	Model/Mesh3D.cpp Model/WindowInfo.cpp Model/FrameParams.cpp Model/LightParams.cpp Model/MaterialParams.cpp \
+	Model/Mesh/Mesh3D.cpp Model/WindowInfo.cpp Model/FrameParams.cpp Model/LightParams.cpp Model/Material/MaterialParams.cpp \
 	Init/SDLInit.cpp Init/GlewInit.cpp \
 	Manager/WindowManager.cpp Manager/SceneManager.cpp Manager/ModelManager.cpp \
 	Helper/ShaderProgram.cpp Helper/UniformBuffer.cpp \

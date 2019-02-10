@@ -7,7 +7,7 @@ class Game
 public:
 	Game();
 	void Run();
-	
+
 	bool running;
 protected:
 private:
@@ -17,7 +17,7 @@ private:
 	void Render();
 	void Destroy();
 	void DelayFrameTime(const unsigned frameStart, const unsigned short targetFPS);
-	
+
 	SceneManager sceneManager;
 	WindowManager windowManager;
 	ScaledDeltaTimer timer;
