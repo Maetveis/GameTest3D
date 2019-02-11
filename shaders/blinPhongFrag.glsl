@@ -45,7 +45,7 @@ vec3 shadeFrom(Light light)
 
 void main()
 {
-	vec3 color = Ka * vec3(0.4, 0.4, 0.4);//lights[0].color * 0.1;
+	vec3 color = Ka * vec3(0.4, 0, 0.4);//lights[0].color * 0.1;
 
 	for(uint i = 0; i < lightCount; ++i)
 	{

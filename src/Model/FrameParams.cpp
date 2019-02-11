@@ -9,10 +9,6 @@ void FrameParams::Bind(const ShaderProgram& program)
 	buffer.Bind(program, program.GetUniformBlockIndex(blockName));
 }
 
-void FrameParams::Init()
-{
-}
-
 void FrameParams::Update()
 {
 	buffer.BufferData(data, GL_DYNAMIC_DRAW);

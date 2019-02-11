@@ -22,7 +22,7 @@ public:
 		return id;
 	}
 
-	void Bind(GLenum target)
+	void Bind(GLenum target) const
 	{
 		glBindBuffer(target, id);
 	}

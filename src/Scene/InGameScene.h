@@ -3,7 +3,6 @@
 
 #include "Scene.h"
 #include "../Manager/ModelManager.h"
-#include "../Model/Mesh/Mesh3D.h"
 #include "../Program/Mesh3DColor.h"
 
 #include <SDL2/SDL.h>
@@ -30,6 +29,8 @@ public:
 	virtual void OnWindow(SDL_WindowEvent& event);
 
 	virtual void OnQuit(SDL_QuitEvent& event);
+
+	void Quit();
 protected:
 private:
 	bool LoadData();

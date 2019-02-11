@@ -1,11 +1,7 @@
 #include "Mesh3DColor.h"
 
-void Mesh3DColor::Init()
+Mesh3DColor::Mesh3DColor()
 {
-	frame.Init();
-	material.Init();
-	light.Init();
-
 	program.CreateName();
 	program.VsFsProgram(vertFileName, fragFileName);
 

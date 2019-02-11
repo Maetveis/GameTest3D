@@ -53,8 +53,8 @@ public:
 
 	std::string GetInfoLog();
 
-	void VsFsProgram( const std::string& vertexShader,
-		const std::string& fragmentShader);
+	void VsFsProgram( 	const std::string& vertexShader,
+						const std::string& fragmentShader);
 
 	static GLuint CompileShader(const GLuint shaderType, const std::string &shaderCode);
 private:

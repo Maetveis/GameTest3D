@@ -3,28 +3,42 @@
 
 #include <unordered_map>
 #include <vector>
+#include <utility>
 
-#include "../Model/Mesh/Mesh3D.h"
+#include "../Helper/Buffer.hpp"
+#include "../Model/RigidModel.hpp"
+#include "../Model/Mesh/BasicVertexFormat.h"
+#include "../Model/Mesh/BasicVertexDescriptor.hpp"
+#include "../DataStore/GPUAllocator.hpp"
 
 class aiMesh;
 
 class ModelManager
 {
 public:
-	bool ImportFile(const std::string& filename, const std::string& meshname);
+	ModelManager();
 
-	Mesh3D& Get(const std::string& name);
-	const Mesh3D& Get(const std::string& name) const;
+	void Draw(const std::string& name) const;
 
-	Mesh3D& operator[](const std::string& name);
-	const Mesh3D& operator[](const std::string& name) const;
+	bool ImportFile(const std::string& filename, const std::string& name);
+
+	const RigidModel& Get(const std::string& name) const;
+
+	const RigidModel& operator[](const std::string& name) const;
+
+	void Delete(const std::string& modelName);
 private:
-	using mapType = typename std::unordered_map<std::string, Mesh3D>;
+	GPUAllocator vertexAllocator = GPUAllocator(100000000);
+	GPUAllocator indexAllocator  = GPUAllocator(100000000);
 
-	void InsertVertices(std::vector<BasicVertexFormat>&, const aiMesh* mesh);
-	unsigned int InsertIndices(std::vector<Mesh3D::indexType>&, const aiMesh* mesh);
+	Buffer vertexBuffer;
+	Buffer indexBuffer;
 
-	mapType meshes;
+	BasicVertexDescriptor desc;
+
+	std::unordered_map<std::string, RigidModel> models;
+	std::pair<GLuint, GLuint> InsertVertices(const aiMesh& mesh);
+	std::pair<GLuint, GLuint> InsertIndices (const aiMesh& mesh);
 };
 
 #endif //MODEL_MANAGER_H

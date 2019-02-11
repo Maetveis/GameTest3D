@@ -7,9 +7,29 @@
 #include <assimp/postprocess.h>
 
 #include <algorithm>
-#include <utility>
 
-bool ModelManager::ImportFile(const std::string& filename, const std::string& meshname)
+ModelManager::ModelManager()
+{
+	glVertexArrayElementBuffer(desc.Get(), indexBuffer.GetId());
+	desc.Attach(vertexBuffer);
+
+	vertexBuffer.BufferData(100000000, nullptr, GL_STATIC_DRAW);
+	indexBuffer.BufferData(100000000, nullptr, GL_STATIC_DRAW);
+}
+
+void ModelManager::Draw(const std::string& name) const
+{
+	auto it = models.find(name);
+	const RigidModel& model = it->second;
+
+	desc.Bind();
+	for(unsigned i = 0; i < model.meshes.size(); ++i)
+	{
+		model.meshes[i].Draw();
+	}
+}
+
+bool ModelManager::ImportFile(const std::string& filename, const std::string& name)
 {
 	Assimp::Importer importer;
 
@@ -27,74 +47,86 @@ bool ModelManager::ImportFile(const std::string& filename, const std::string& me
 		return false;
 	}
 
-	Logger::Debug << "Assimp finished Loading" << '\n';
-
-	std::vector<BasicVertexFormat>	v;
-	std::vector<Mesh3D::indexType> 	indices;
-	std::vector<int>				gIC;
-	std::vector<int>				gVO;
-	std::vector<Mesh3D::indexType*>	gIO;
-
+	RigidModel newModel;
 	for(unsigned int i = 0; i < scene->mNumMeshes; ++i)
 	{
-		gVO.emplace_back(v.size());
-		gIO.emplace_back(static_cast<Mesh3D::indexType*>(0) + indices.size());
+		auto vertex = InsertVertices(*scene->mMeshes[i]);
+		auto index = InsertIndices(*scene->mMeshes[i]);
 
-		gIC.emplace_back(InsertIndices(indices, scene->mMeshes[i]));
-		InsertVertices(v, scene->mMeshes[i]);
+		//if(scene->mMeshes[i]->mNumVertices > 10000)
+			newModel.meshes.emplace_back(vertex.first, (GLint) vertex.second, (char*)(0) + index.first, index.second, GL_UNSIGNED_INT);
+		//else
+		//	newModel.meshes.emplace(vertexOffset, vertexSize, indexPointer, indexCount, GL_UNSIGNED_SHORT);
 	}
 
-	Mesh3D& it = meshes[meshname];
-	it.Init();
-	it.MoveData(std::move(v), std::move(indices), std::move(gIC), std::move(gVO), std::move(gIO));
-	it.BufferData();
-	it.ClearLocalBuffer();
+	models[name] = std::move(newModel);
 
-	Logger::Debug << "Finished converting" << '\n';
+	Logger::Debug << "Successfully loaded " << filename << '\n';
 
 	return true;
 }
 
-void ModelManager::InsertVertices(std::vector<BasicVertexFormat>& vertices, const aiMesh* mesh)
+std::pair<GLuint, GLuint> ModelManager::InsertIndices (const aiMesh& mesh)
 {
-	const glm::vec3 zero = glm::vec3(0.,0.,0.);
-	for (unsigned int i = 0 ; i < mesh->mNumVertices; ++i) {
-		const glm::vec3* p = reinterpret_cast<glm::vec3*>(mesh->mVertices + i);
-		const glm::vec3* n = mesh->HasNormals() ? reinterpret_cast<glm::vec3*>(mesh->mNormals + i) : &zero;
-        const glm::vec3* t = mesh->HasTextureCoords(0) ? reinterpret_cast<glm::vec3*>(mesh->mTextureCoords[0] + i) : &zero;
+	std::vector<GLuint> indices;
+	indices.reserve(mesh.mNumFaces * 3);
 
-        vertices.emplace_back(*p, *n, *t);
-    }
+	for(unsigned face = 0; face < mesh.mNumFaces; ++face)
+	{
+		indices.emplace_back(mesh.mFaces[face].mIndices[0]);
+		indices.emplace_back(mesh.mFaces[face].mIndices[1]);
+		indices.emplace_back(mesh.mFaces[face].mIndices[2]);
+	}
+
+	GLuint indexCount = indices.size();
+	GLuint offset;
+	if(!indexAllocator.Allocate(indexCount * sizeof(GLuint), sizeof(GLuint), &offset))
+		Logger::Error << "Index Allocation failed" << '\n';
+
+	indexBuffer.BufferSubData(offset, indices, GL_STATIC_DRAW);
+	return std::make_pair(offset, indexCount);
 }
 
-unsigned int ModelManager::InsertIndices(std::vector<Mesh3D::indexType>& indices, const aiMesh* mesh)
+std::pair<GLuint, GLuint> ModelManager::InsertVertices(const aiMesh& mesh)
 {
-	for (unsigned int i = 0 ; i < mesh->mNumFaces; ++i) {
-        const aiFace& Face = mesh->mFaces[i];
-        indices.emplace_back(Face.mIndices[0]);
-		indices.emplace_back(Face.mIndices[1]);
-        indices.emplace_back(Face.mIndices[2]);
-    }
+	std::vector<BasicVertexFormat> vertices;
+	vertices.reserve(mesh.mNumVertices);
 
-	return mesh->mNumFaces * 3;
+	auto zero = glm::vec2(0,0);
+	for(unsigned i = 0; i < mesh.mNumVertices; ++i)
+	{
+		glm::vec3 const* p = reinterpret_cast<glm::vec3*>(&mesh.mVertices[i]);
+		glm::vec3 const* n = reinterpret_cast<glm::vec3*>(&mesh.mNormals[i]);
+		glm::vec2 const* uv = mesh.HasTextureCoords(i) ? reinterpret_cast<glm::vec2 const*>(&mesh.mTextureCoords[i]) : &zero;
+		vertices.emplace_back(*p, *n, *uv);
+	}
+
+	GLuint offset;
+	GLuint vertexSize = static_cast<GLuint> (vertices.size() * sizeof(BasicVertexFormat));
+	if(!vertexAllocator.Allocate(vertexSize, sizeof(BasicVertexFormat), &offset))
+		Logger::Error << "Vertex Allocation failed" << '\n';
+
+	vertexBuffer.BufferSubData(offset, vertices, GL_STATIC_DRAW);
+
+	return std::make_pair(offset / sizeof(BasicVertexFormat), vertexSize);
 }
 
-Mesh3D& ModelManager::Get(const std::string& name)
+/*Mesh3D& ModelManager::Get(const std::string& name)
 {
-	return meshes.find(name)->second;
+	return models.find(name)->second;
 }
 
 Mesh3D& ModelManager::operator[](const std::string& name)
 {
-	return meshes.find(name)->second;
+	return models.find(name)->second;
+}*/
+
+const RigidModel& ModelManager::Get(const std::string& name) const
+{
+	return models.find(name)->second;
 }
 
-const Mesh3D& ModelManager::Get(const std::string& name) const
+const RigidModel& ModelManager::operator[](const std::string& name) const
 {
-	return meshes.find(name)->second;
-}
-
-const Mesh3D& ModelManager::operator[](const std::string& name) const
-{
-	return meshes.find(name)->second;
+	return models.find(name)->second;
 }

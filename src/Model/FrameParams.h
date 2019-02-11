@@ -14,25 +14,24 @@ public:
 	{
 		data.view = v;
 	}
-	
+
 	void SetProj(const glm::mat4 p)
 	{
 		data.proj = p;
 	}
-	
+
 	const glm::mat4& GetView() const
 	{
 		return data.view;
 	}
-	
-	const glm::mat4& GetProj() const 
+
+	const glm::mat4& GetProj() const
 	{
 		return data.proj;
 	}
-	
+
 	void Bind(const ShaderProgram& program);
 	
-	void Init();
 	void Update();
 private:
 	struct Data

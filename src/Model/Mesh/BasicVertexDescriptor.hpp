@@ -16,7 +16,7 @@ class BasicVertexDescriptor
 private:
 	VertexArrayDescriptor descriptor;
 
-	StaticCounter<GLint, VertexBufferBindingPointTrait> counter[3];
+	StaticCounter<GLint, VertexBufferBindingPointTrait> counter;
 public:
 	BasicVertexDescriptor()
 	{
@@ -32,9 +32,9 @@ public:
 		glEnableVertexArrayAttrib(descriptor.Get(), 2);
 		glVertexArrayAttribFormat(descriptor.Get(), 2, 2, GL_FLOAT, GL_FALSE, 24);
 
-		glVertexArrayAttribBinding(descriptor.Get(), 0, 0);//counter[0]);
-		glVertexArrayAttribBinding(descriptor.Get(), 1, 0);//counter[1]);
-		glVertexArrayAttribBinding(descriptor.Get(), 2, 0);//counter[2]);*/
+		glVertexArrayAttribBinding(descriptor.Get(), 0, counter);
+		glVertexArrayAttribBinding(descriptor.Get(), 1, counter);
+		glVertexArrayAttribBinding(descriptor.Get(), 2, counter);
 	}
 
 	BasicVertexDescriptor(Buffer& vertexBuffer, Buffer& indexBuffer)
@@ -62,13 +62,11 @@ public:
 		Logger::Debug << "offsetof(BasicVertexFormat, norm): " << offsetof(BasicVertexFormat, norm) << '\n';
 		Logger::Debug << "offsetof(BasicVertexFormat, uv): " << offsetof(BasicVertexFormat, uv) << '\n';
 
-		Logger::Debug << "counter[0] " << counter[0] << '\n';
-		Logger::Debug << "counter[1] " << counter[1] << '\n';
-		Logger::Debug << "counter[2] " << counter[2] << '\n';
+		Logger::Debug << "counter " << counter << '\n';
 
 		Logger::Debug << "buffer.GetId(): " << buffer.GetId() << '\n';
 
-		glVertexArrayVertexBuffer(descriptor.Get(), 0, buffer.GetId(), 0, 32);
+		glVertexArrayVertexBuffer(descriptor.Get(), counter, buffer.GetId(), 0, 32); // Check this line if it doesnt work
 	}
 
 	void Bind() const

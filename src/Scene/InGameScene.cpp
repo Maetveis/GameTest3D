@@ -54,8 +54,6 @@ bool InGameScene::LoadData()
 
 bool InGameScene::LoadShaders()
 {
-	program.Init();
-
 	Logger::Debug << "UniformLocation(model): " << (modelID = program.Program().GetUniformLocation("model")) << '\n';
 
 	program.Material() = ColorFormat(glm::vec3(.1, .1, .4), glm::vec3(0, 0, 1.), glm::vec3(0., .3, .8), 15.4);
@@ -104,14 +102,14 @@ void InGameScene::Render()
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &(matModel[0][0]));
 
-	modelManager.Get("iphone").DrawAll();
-	//modelManager.Get("cube").DrawAll();
+	modelManager.Draw("iphone");
+	modelManager.Draw("cube");
 
 	program.Unuse();
 }
 void InGameScene::OnQuit(SDL_QuitEvent& event)
 {
-	game->running = false;
+	Quit();
 }
 
 void InGameScene::OnWindow(SDL_WindowEvent& event)
@@ -126,7 +124,20 @@ void InGameScene::OnWindow(SDL_WindowEvent& event)
 	}
 }
 
+void InGameScene::Quit()
+{
+	Logger::Debug << "Exit" << '\n';
+	game->running = false;
+}
 void InGameScene::OnKeyboard(SDL_KeyboardEvent& event)
 {
-	Logger::Debug << event.keysym.sym << '\n';
+	switch(event.keysym.sym)
+	{
+		case SDLK_ESCAPE:
+			Quit();
+			break;
+		default:
+			Logger::Debug << "Pressed key with code: " << event.keysym.sym << '\n';
+			break;
+	}
 }

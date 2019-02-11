@@ -7,8 +7,6 @@ LIBDIR := lib
 LDFLAGS := -g
 LDLIBS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lassimp
 
-RM := rm
-RMDIR := rm -r
 MKDIR := mkdir
 
 ifeq ($(OS),Windows_NT)
@@ -53,7 +51,7 @@ $(BUILD_DIRS):
 	$(MKDIR) "$@"
 
 clean :
-	-$(RM) "$(OUT)"
-	-$(RMDIR) "$(OBJDIR)"
+	$(RM) "$(OUT)"
+	$(RM) -r "$(OBJDIR)"
 
 -include $(OBJS:.o=.d)

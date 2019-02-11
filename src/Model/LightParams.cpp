@@ -1,10 +1,6 @@
 #include "LightParams.h"
 #include "../Helper/ShaderProgram.h"
 
-void LightParams::Init()
-{
-}
-
 void LightParams::Update()
 {
 	buffer.BufferData(data, GL_STATIC_DRAW);

@@ -5,12 +5,14 @@
 #include "../Model/FrameParams.h"
 #include "../Model/Material/MaterialParams.h"
 #include "../Model/LightParams.h"
-#include "../Model/Mesh/Mesh3D.h"
+#include "../Model/Mesh/Mesh3D.hpp"
 
 class Mesh3DColor
 {
 public:
 	void Init();
+
+	Mesh3DColor();
 
 	void SetView(const glm::mat4 v)
 	{
@@ -67,7 +69,7 @@ public:
 
 	void Render(Mesh3D& mesh)
 	{
-		mesh.DrawAll();
+		mesh.Draw();
 	};
 
 	ShaderProgram& Program()

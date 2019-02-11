@@ -48,8 +48,6 @@ public:
 	}
 
 	void Bind(const ShaderProgram& program);
-
-	void Init();
 private:
 	static constexpr const char* blockName = "LightParams";
 
