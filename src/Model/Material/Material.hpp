@@ -1,13 +1,28 @@
-#ifndef MATERIAL_H
+#ifndef MATERIAL_HPP
+
+#include <GL/glew.h>
 
 class Material
 {
-	virtual void BindNamed(ShaderProgram program) = 0;
-	virtual void BindCurrent() = 0;
-
-	virtual void ~Material()
+private:
+	GLuint offset;
+	GLuint size;
+public:
+	Material(GLuint _offset, GLuint _size) :
+		offset(_offset),
+		size(_size)
 	{
 	}
-}
 
-#endif //MATERIAL_H
+	GLuint GetOffset()
+	{
+		return offset;
+	}
+
+	GLuint GetSize()
+	{
+		return size;
+	}
+};
+
+#endif //MATERIAL_HPP

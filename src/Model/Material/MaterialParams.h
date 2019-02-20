@@ -2,33 +2,33 @@
 #define MATERIAL_PARAMS_H
 
 #include "../../Helper/UniformBuffer.h"
+#include "../../DataStore/ManagedBuffer.hpp"
+
 #include "ColorFormat.hpp"
+#include "Material.hpp"
 
 class ShaderProgram;
 
 class MaterialParams
 {
 public:
-	MaterialParams() = default;
-
-	ColorFormat& Data()
+	MaterialParams() :
+		buffer(30000, GL_STATIC_DRAW)
 	{
-		return data;
 	}
 
-	const ColorFormat& Data() const
-	{
-		return data;
-	}
-
-	void Init();
 	void Bind(const ShaderProgram& program);
-	void Update();
+
+	size_t Push(const ColorFormat& material);
+
+	void UseMaterial(size_t id);
 private:
 	static constexpr const char* blockName = "MaterialParams";
 
-	UniformBuffer buffer;
-	ColorFormat data;
+	std::vector<Material> materials;
+
+	UniformBuffer bindingIndex;
+	ManagedBuffer buffer;
 };
 
 #endif //MATERIAL_PARAMS_H

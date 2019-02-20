@@ -2,6 +2,7 @@
 #define FRAME_PARAMS_H
 
 #include "../Helper/UniformBuffer.h"
+#include "../Helper/Buffer.hpp"
 
 #include <glm/glm.hpp>
 
@@ -31,7 +32,7 @@ public:
 	}
 
 	void Bind(const ShaderProgram& program);
-	
+
 	void Update();
 private:
 	struct Data
@@ -42,7 +43,9 @@ private:
 
 	static constexpr const char* blockName = "FrameParams";
 
-	UniformBuffer buffer;
+	UniformBuffer bindingPoint;
+	Buffer buffer;
+
 	Data data;
 };
 

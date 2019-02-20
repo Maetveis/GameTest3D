@@ -58,6 +58,10 @@ public:
 	bool Allocate(GLuint size, GLuint alignment, GLuint* value);
 	void DeAllocate(GLuint offset, GLuint length);
 
+	GLuint GetSize() const
+	{
+		return max;
+	}
 };
 
 #endif

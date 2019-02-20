@@ -4,6 +4,7 @@
 #include "../Main/Game.h"
 #include "../Helper/UniformBuffer.h"
 #include "../Model/Material/ColorFormat.hpp"
+#include "../Model/ModelLoader.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,7 +14,7 @@
 
 bool InGameScene::Begin()
 {
-	glClearColor(0., 0., 0., 1.);
+	glClearColor(0.3, 0., 0.3, 1.);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
@@ -43,11 +44,13 @@ bool InGameScene::Begin()
 
 bool InGameScene::LoadData()
 {
-	if(!modelManager.ImportFile("../assets/alfa.obj", "iphone"))
-		return false;
+	desc.AttachVertex(vertexBuffer.GetBuffer());
+	desc.AttachIndex(indexBuffer.GetBuffer());
 
-	if(!modelManager.ImportFile("../assets/cube.obj", "cube"))
-		return false;
+	ModelLoader loader(vertexBuffer, indexBuffer, program.GetMaterialParams());
+
+	cube = loader.ImportFile("../assets/cube.obj");
+	car = loader.ImportFile("../assets/alfa.obj");
 
 	return true;
 }
@@ -56,13 +59,12 @@ bool InGameScene::LoadShaders()
 {
 	Logger::Debug << "UniformLocation(model): " << (modelID = program.Program().GetUniformLocation("model")) << '\n';
 
-	program.Material() = ColorFormat(glm::vec3(.1, .1, .4), glm::vec3(0, 0, 1.), glm::vec3(0., .3, .8), 15.4);
-
 	program.SetProj(glm::perspective(45.0f, 640/360.0f, 0.01f, 500.0f));
 	program.SetView(glm::lookAt(glm::vec3( 0.f,  1.f,  6.f), glm::vec3( 0,  0,  0), glm::vec3( 0,  1,  0)));
 
-	program.Lights()[0] = Light(glm::vec3(1.0, 0.5, 0.2), glm::vec3(0, 1.0, 0.7), 10);
-	program.Lights()[1] = Light(glm::vec3(2.0, 0.5, 0.2), glm::vec3(0.2, 0.5, 0.1), 50);
+	program.Lights()[0] = Light(glm::vec3(0., 0., 1.), glm::vec3(.8, .7, .6), 30);
+
+	program.Update();
 
 	return true;
 }
@@ -70,8 +72,6 @@ bool InGameScene::LoadShaders()
 void InGameScene::Update(double deltaTime)
 {
 	time = SDL_GetTicks() / 300.0f;
-
-	program.Lights()[0].strength = 30;
 }
 
 void InGameScene::End()
@@ -102,8 +102,20 @@ void InGameScene::Render()
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &(matModel[0][0]));
 
-	modelManager.Draw("iphone");
-	modelManager.Draw("cube");
+	//modelManager.Draw("iphone");
+	desc.Bind();
+
+	for(unsigned i = 0; i < cube.meshes.size(); ++i)
+	{
+		program.UseMaterial(cube.materials[i]);
+		cube.meshes[i].Draw();
+	}
+
+	for(unsigned i = 0; i < car.meshes.size(); ++i)
+	{
+		program.UseMaterial(car.materials[i]);
+		car.meshes[i].Draw();
+	}
 
 	program.Unuse();
 }

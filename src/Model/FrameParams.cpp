@@ -6,7 +6,8 @@
 void FrameParams::Bind(const ShaderProgram& program)
 {
 	Logger::Debug << "Fp " << blockName << " " << program.GetUniformBlockIndex(blockName) << '\n';
-	buffer.Bind(program, program.GetUniformBlockIndex(blockName));
+	bindingPoint.AttachToBlock(program, program.GetUniformBlockIndex(blockName));
+	bindingPoint.AttachBuffer(buffer);
 }
 
 void FrameParams::Update()

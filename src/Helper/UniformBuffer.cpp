@@ -1,14 +1,19 @@
 #include "UniformBuffer.h"
 
 #include "ShaderProgram.h"
+#include "Buffer.hpp"
 
-void UniformBuffer::BufferData(GLuint bytes, void const* data, GLenum usage)
+void UniformBuffer::AttachBuffer(const Buffer& buffer)
 {
-	glBindBufferBase(GL_UNIFORM_BUFFER, bindingIndex, uniformBuffer.GetId());
-	glBufferData(GL_UNIFORM_BUFFER, bytes, data, usage);
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindingIndex, buffer.GetId());
 }
 
-void UniformBuffer::Bind(const ShaderProgram& program, const GLuint index) const
+void UniformBuffer::AttachBufferRange(const Buffer &buffer, GLuint offset, GLuint size)
+{
+	glBindBufferRange(GL_UNIFORM_BUFFER, bindingIndex, buffer.GetId(), offset, size);
+}
+
+void UniformBuffer::AttachToBlock(const ShaderProgram& program, const GLuint index) const
 {
 	Logger::Debug << "unform buffer bind:" << index << " -> " << bindingIndex <<  '\n';
 

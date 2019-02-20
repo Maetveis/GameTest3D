@@ -1,16 +1,22 @@
 #include "MaterialParams.h"
 #include "../../Helper/ShaderProgram.h"
 
-void MaterialParams::Init()
-{
-}
-
 void MaterialParams::Bind(const ShaderProgram& program)
 {
-	buffer.Bind(program, program.GetUniformBlockIndex(blockName));
+	bindingIndex.AttachToBlock(program, program.GetUniformBlockIndex(blockName));
+	bindingIndex.AttachBuffer(buffer.GetBuffer());
 }
 
-void MaterialParams::Update()
+size_t MaterialParams::Push(const ColorFormat& material)
 {
-	buffer.BufferData(data, GL_DYNAMIC_DRAW);
+	GLuint offset = buffer.Push(material, sizeof(ColorFormat));
+
+	materials.emplace_back(offset, sizeof(ColorFormat));
+
+	return materials.size() - 1;
+}
+
+void MaterialParams::UseMaterial(size_t id)
+{
+	bindingIndex.AttachBufferRange(buffer.GetBuffer(), materials[id].GetOffset(), materials[id].GetSize());
 }

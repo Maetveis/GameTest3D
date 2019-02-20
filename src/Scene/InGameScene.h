@@ -2,8 +2,10 @@
 #define IN_GAME_SCENE_H
 
 #include "Scene.h"
-#include "../Manager/ModelManager.h"
+#include "../DataStore/ManagedBuffer.hpp"
 #include "../Program/Mesh3DColor.h"
+#include "../Model/RigidModel.hpp"
+#include "../Model/Mesh/BasicVertexDescriptor.hpp"
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -13,6 +15,12 @@ class InGameScene :
 	public Scene
 {
 public:
+	InGameScene() :
+		vertexBuffer(100000000, GL_STATIC_DRAW),
+		indexBuffer (100000000, GL_STATIC_DRAW)
+	{
+	}
+
 	virtual bool Begin();
 
 	virtual void End();
@@ -38,8 +46,13 @@ private:
 
 	GLuint modelID;
 
-	/*ShaderManager shaderManager;*/
-	ModelManager modelManager;
+	BasicVertexDescriptor desc;
+
+	ManagedBuffer vertexBuffer;
+	ManagedBuffer indexBuffer;
+
+	RigidModel car;
+	RigidModel cube;
 
 	glm::mat4 matModel;
 

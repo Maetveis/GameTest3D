@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -Wall -O3 -g -std=c++17 -MMD -MP
+CXXFLAGS := -Wall -O0 -g -std=c++17 -MMD -MP
 SRCDIR := src
 OBJDIR := build/obj
 INCL := include
@@ -14,22 +14,18 @@ ifeq ($(OS),Windows_NT)
 	LDLIBS += -lmingw32 -lopengl32 -lglew32
 	#LDFLAGS += -mwindows
 else
-#$(CXX) $< -c $(CXXFLAGS) -I$(INCL) -o $@
-#$(CXX) $^ $(LDFLAGS) -L$(LIBDIR) $(LDLIBS) -o $(OUT)
 	OUT := bin/main.run
     INCL :=
     LDLIBS += -lGL -lGLEW
     MKDIR += -p
 endif
 
-#Render/RenderManager.cpp
-
 SRCS := DataStore/GPUAllocator.cpp \
 	Main/main.cpp Main/Game.cpp Main/ScaledDeltaTimer.cpp \
 	Scene/InGameScene.cpp \
-	Model/Mesh/Mesh3D.cpp Model/WindowInfo.cpp Model/FrameParams.cpp Model/LightParams.cpp Model/Material/MaterialParams.cpp \
+	Model/Mesh/Mesh3D.cpp Model/WindowInfo.cpp Model/FrameParams.cpp Model/LightParams.cpp Model/Material/MaterialParams.cpp Model/ModelLoader.cpp \
 	Init/SDLInit.cpp Init/GlewInit.cpp \
-	Manager/WindowManager.cpp Manager/SceneManager.cpp Manager/ModelManager.cpp \
+	Manager/WindowManager.cpp Manager/SceneManager.cpp \
 	Helper/ShaderProgram.cpp Helper/UniformBuffer.cpp \
 	Program/Mesh3DColor.cpp
 

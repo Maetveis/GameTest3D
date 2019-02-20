@@ -42,20 +42,18 @@ public:
 	void Update()
 	{
 		frame.Update();
-		material.Update();
 		light.Update();
 	}
 
-	ColorFormat& Material()
+	MaterialParams& GetMaterialParams()
 	{
-		return material.Data();
+		return material;
 	}
 
-	const ColorFormat& Material() const
+	void UseMaterial(size_t id)
 	{
-		return material.Data();
+		material.UseMaterial(id);
 	}
-
 
 	void Use()
 	{

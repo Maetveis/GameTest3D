@@ -2,6 +2,7 @@
 #define LIGHT_PARAMS_H
 
 #include "../Helper/UniformBuffer.h"
+#include "../Helper/Buffer.hpp"
 
 #include <glm/glm.hpp>
 
@@ -51,11 +52,13 @@ public:
 private:
 	static constexpr const char* blockName = "LightParams";
 
-	UniformBuffer buffer;
+	UniformBuffer bindingPoint;
+	Buffer buffer;
+
 	struct Data
 	{
 		Light lights[10];
-		unsigned int lightCount = 2;
+		unsigned int lightCount = 1;
 	};
 	Data data;
 };

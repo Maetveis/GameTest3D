@@ -56,7 +56,7 @@ public:
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BasicVertexFormat), (void*)offsetof(BasicVertexFormat, uv));
 	}
 
-	void Attach(const Buffer& buffer)
+	void AttachVertex(const Buffer& buffer)
 	{
 		Logger::Debug << "offsetof(BasicVertexFormat, pos): " << offsetof(BasicVertexFormat, pos) << '\n';
 		Logger::Debug << "offsetof(BasicVertexFormat, norm): " << offsetof(BasicVertexFormat, norm) << '\n';
@@ -67,6 +67,11 @@ public:
 		Logger::Debug << "buffer.GetId(): " << buffer.GetId() << '\n';
 
 		glVertexArrayVertexBuffer(descriptor.Get(), counter, buffer.GetId(), 0, 32); // Check this line if it doesnt work
+	}
+
+	void AttachIndex(const Buffer& buffer)
+	{
+		glVertexArrayElementBuffer(descriptor.Get(), buffer.GetId());
 	}
 
 	void Bind() const

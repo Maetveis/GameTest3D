@@ -8,5 +8,6 @@ void LightParams::Update()
 
 void LightParams::Bind(const ShaderProgram& program)
 {
-	buffer.Bind(program, program.GetUniformBlockIndex(blockName));
+	bindingPoint.AttachToBlock(program, program.GetUniformBlockIndex(blockName));
+	bindingPoint.AttachBuffer(buffer);
 }
