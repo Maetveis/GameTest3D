@@ -14,7 +14,7 @@
 
 bool InGameScene::Begin()
 {
-	glClearColor(0.3, 0., 0.3, 1.);
+	glClearColor(0.3, 0., 0., 1.);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
