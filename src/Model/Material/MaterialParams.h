@@ -1,13 +1,15 @@
 #ifndef MATERIAL_PARAMS_H
 #define MATERIAL_PARAMS_H
 
-#include "../../Helper/UniformBuffer.h"
+#include "../../Helper/UniformBuffer.hpp"
 #include "../../DataStore/ManagedBuffer.hpp"
 
 #include "ColorFormat.hpp"
 #include "Material.hpp"
 
-class ShaderProgram;
+namespace GL {
+	class Program;
+}
 
 class MaterialParams
 {
@@ -17,7 +19,7 @@ public:
 	{
 	}
 
-	void Bind(const ShaderProgram& program);
+	void Bind(const GL::Program& program);
 
 	size_t Push(const ColorFormat& material);
 
@@ -27,7 +29,7 @@ private:
 
 	std::vector<Material> materials;
 
-	UniformBuffer bindingIndex;
+	GL::UniformBuffer bindingIndex;
 	ManagedBuffer buffer;
 };
 

@@ -5,6 +5,8 @@
 #include "../Init/SDLInit.h"
 #include "../Model/WindowInfo.h"
 
+#include "../Helper/StaticCounter.hpp"
+
 #include <SDL2/SDL.h>
 #include <iostream>
 
@@ -39,7 +41,9 @@ bool Game::Init()
 	if(!windowManager.Init())
 		return false;
 
-	windowManager.SpawnWindow(WindowInfo());
+	WindowInfo info;
+	info.SetTitle("asd dev");
+	windowManager.SpawnWindow(info);
 
 	//Starting main Scene
 	sceneManager.AttachGame(this);

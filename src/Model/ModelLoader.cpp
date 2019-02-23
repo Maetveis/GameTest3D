@@ -11,7 +11,7 @@
 
 #include <limits>
 
-RigidModel ModelLoader::ImportFile(const std::string& filename)
+bool ModelLoader::ImportFile(const std::string& filename, RigidModel& newModel)
 {
 	Assimp::Importer importer;
 
@@ -23,12 +23,10 @@ RigidModel ModelLoader::ImportFile(const std::string& filename)
 			aiProcess_JoinIdenticalVertices
 	);
 
-	RigidModel newModel;
-
 	if(!scene)
 	{
 		Logger::Warning << "Error parsing file: " << filename << "\nAssimp error: " << importer.GetErrorString() << '\n';
-		return newModel;
+		return false;
 	}
 
 	for(unsigned int i = 0; i < scene->mNumMeshes; ++i)
@@ -46,7 +44,15 @@ RigidModel ModelLoader::ImportFile(const std::string& filename)
 
 	Logger::Debug << "Successfully loaded " << filename << '\n';
 
-	return newModel;
+	return true;
+}
+
+template <typename T>
+void ModelLoader::HandleIndices(const aiMesh& mesh, RigidModel& model, const std::pair<GLuint, GLuint>& vertex)
+{
+	std::vector<T> vec = GetIndices<T>(mesh);
+	GLuint indexOffset = InsertIndices(vec.size() * sizeof(T), vec.data(), sizeof(T));
+	model.meshes.emplace_back(vertex.first, (GLint) vertex.second, (char*)(0) + indexOffset, vec.size(), GL::TypeEnum<T>::value);
 }
 
 GLuint ModelLoader::InsertIndices (GLuint size, const void* data, GLuint alignment)

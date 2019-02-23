@@ -1,19 +1,29 @@
-#ifndef SHADER_PROGRAM_H
-#define SHADER_PROGRAM_H
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
 #include <GL/glew.h>
 #include <string>
 
-class ShaderProgram
+namespace GL
 {
+	class Shader;
+}
+
+namespace GL
+{
+
+class Program
+{
+private:
+	GLuint programID;
 public:
-	ShaderProgram() = default;
+	Program() = default;
 
 	void CreateName();
 
-	explicit ShaderProgram(GLuint p);
+	explicit Program(GLuint p);
 
-	~ShaderProgram()
+	~Program()
 	{
 		Destroy();
 	}
@@ -45,7 +55,7 @@ public:
 	GLuint GetUniformLocation(const char* name) const;
 	GLuint GetUniformBlockIndex(const char* name) const;
 
-	void AttachShader(GLuint shaderID);
+	void AttachShader(const Shader& shader);
 	bool Link();
 	void Use() const;
 	void Unuse() const;
@@ -53,14 +63,10 @@ public:
 
 	std::string GetInfoLog();
 
-	void VsFsProgram( 	const std::string& vertexShader,
-						const std::string& fragmentShader);
-
-	static GLuint CompileShader(const GLuint shaderType, const std::string &shaderCode);
-private:
-	GLuint programID;
-
-	static std::string ReadShader(const std::string& filename);
+	bool VsFsProgram( 	const std::string& vertexShaderName,
+						const std::string& fragmentShaderName);
 };
 
-#endif //SHADER_PROGRAM_H
+}// namespace GL;
+
+#endif //PROGRAM_H

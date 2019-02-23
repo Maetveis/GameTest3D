@@ -9,15 +9,35 @@ public:
 	ScaledDeltaTimer() = default;
 	ScaledDeltaTimer(const ScaledDeltaTimer&) = default;
 	ScaledDeltaTimer& operator=(const ScaledDeltaTimer& t) = default;
-	
+
 	void Start();
+
 	void Update();
-	void SetScaleFactor(const double newScale);
-	
-	double GetScaleFactor() const;
-	double GetScaledTime() const;
-	double GetUnscaledTime() const;
-	std::uint32_t GetFrameStart() const;
+	void SetScaleFactor(const double newScale)
+	{
+		timeScale = newScale;
+	}
+
+	double GetScaleFactor() const
+	{
+		return timeScale;
+	}
+
+	double GetScaledTime() const
+	{
+		return scaledDelta;
+	}
+
+	double GetUnscaledTime() const
+	{
+		return unscaledDelta;
+	}
+
+	std::uint32_t GetFrameStart() const
+	{
+		return lastFrameTime;
+	}
+
 protected:
 private:
 	double timeScale;

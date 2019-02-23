@@ -1,12 +1,12 @@
 #include "LightParams.h"
-#include "../Helper/ShaderProgram.h"
+#include "../Helper/Program.hpp"
 
 void LightParams::Update()
 {
 	buffer.BufferData(data, GL_STATIC_DRAW);
 }
 
-void LightParams::Bind(const ShaderProgram& program)
+void LightParams::Bind(const GL::Program& program)
 {
 	bindingPoint.AttachToBlock(program, program.GetUniformBlockIndex(blockName));
 	bindingPoint.AttachBuffer(buffer);

@@ -1,12 +1,17 @@
 #ifndef LIGHT_PARAMS_H
 #define LIGHT_PARAMS_H
 
-#include "../Helper/UniformBuffer.h"
+#include "../Helper/UniformBuffer.hpp"
 #include "../Helper/Buffer.hpp"
 
 #include <glm/glm.hpp>
 
-class ShaderProgram;
+
+namespace GL {
+
+	class Program;
+	
+}
 
 struct Light
 {
@@ -48,12 +53,12 @@ public:
 		return data.lightCount;
 	}
 
-	void Bind(const ShaderProgram& program);
+	void Bind(const GL::Program& program);
 private:
 	static constexpr const char* blockName = "LightParams";
 
-	UniformBuffer bindingPoint;
-	Buffer buffer;
+	GL::UniformBuffer bindingPoint;
+	GL::Buffer buffer;
 
 	struct Data
 	{

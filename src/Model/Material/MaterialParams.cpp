@@ -1,7 +1,7 @@
 #include "MaterialParams.h"
-#include "../../Helper/ShaderProgram.h"
+#include "../../Helper/Program.hpp"
 
-void MaterialParams::Bind(const ShaderProgram& program)
+void MaterialParams::Bind(const GL::Program& program)
 {
 	bindingIndex.AttachToBlock(program, program.GetUniformBlockIndex(blockName));
 	bindingIndex.AttachBuffer(buffer.GetBuffer());

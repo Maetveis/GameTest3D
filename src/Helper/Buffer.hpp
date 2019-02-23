@@ -6,6 +6,8 @@
 
 #include "../Log/Logger.h"
 
+namespace GL {
+
 class Buffer
 {
 private:
@@ -72,5 +74,7 @@ public:
 	}
 
 };
+
+}// namespace GL
 
 #endif

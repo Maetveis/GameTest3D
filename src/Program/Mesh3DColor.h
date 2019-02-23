@@ -1,7 +1,7 @@
 #ifndef MESH_3D_COLOR_H
 #define MESH_3D_COLOR_H
 
-#include "../Helper/ShaderProgram.h"
+#include "../Helper/Program.hpp"
 #include "../Model/FrameParams.h"
 #include "../Model/Material/MaterialParams.h"
 #include "../Model/LightParams.h"
@@ -70,7 +70,7 @@ public:
 		mesh.Draw();
 	};
 
-	ShaderProgram& Program()
+	GL::Program& Program()
 	{
 		return program;
 	}
@@ -82,7 +82,7 @@ private:
 	FrameParams frame;
 	MaterialParams material;
 	LightParams light;
-	ShaderProgram program;
+	GL::Program program;
 };
 
 #endif //MESH_3D_COLOR_H

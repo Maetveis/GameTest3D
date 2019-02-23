@@ -7,17 +7,19 @@
 #include "StaticCounter.hpp"
 #include "../Log/Logger.h"
 
-class UnifromBlockBindingIndexTrait
-{
-};
+namespace GL {
 
-class ShaderProgram;
+class Program;
 class Buffer;
+
+}
+
+namespace GL {
 
 class UniformBuffer
 {
 private:
-	StaticCounter<GLuint, UnifromBlockBindingIndexTrait> bindingIndex;
+	StaticCounter<GLuint, UniformBuffer> bindingIndex;
 
 public:
 
@@ -26,7 +28,7 @@ public:
 		Logger::Debug << "Created unifrom buffer with binding index: " << bindingIndex.Get() << '\n';
 	}
 
-	void AttachToBlock(const ShaderProgram& program, const GLuint index) const;
+	void AttachToBlock(const Program& program, const GLuint index) const;
 
 	void AttachBuffer(const Buffer& buffer);
 
@@ -38,5 +40,7 @@ public:
 	}
 
 };
+
+}// namespace GL
 
 #endif //UNIFORM_BUFFER_H

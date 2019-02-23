@@ -8,7 +8,7 @@ class ManagedBuffer
 {
 private:
 	GPUAllocator allocator;
-	Buffer buffer;
+	GL::Buffer buffer;
 public:
 	ManagedBuffer(GLuint size, GLenum usage) :
 		allocator(size)
@@ -57,12 +57,12 @@ public:
 		allocator.DeAllocate(offset, length);
 	}
 
-	Buffer& GetBuffer()
+	GL::Buffer& GetBuffer()
 	{
 		return buffer;
 	}
 
-	const Buffer& GetBuffer() const
+	const GL::Buffer& GetBuffer() const
 	{
 		return buffer;
 	}

@@ -1,7 +1,9 @@
-#include "UniformBuffer.h"
+#include "UniformBuffer.hpp"
 
-#include "ShaderProgram.h"
+#include "Program.hpp"
 #include "Buffer.hpp"
+
+namespace GL {
 
 void UniformBuffer::AttachBuffer(const Buffer& buffer)
 {
@@ -13,9 +15,11 @@ void UniformBuffer::AttachBufferRange(const Buffer &buffer, GLuint offset, GLuin
 	glBindBufferRange(GL_UNIFORM_BUFFER, bindingIndex, buffer.GetId(), offset, size);
 }
 
-void UniformBuffer::AttachToBlock(const ShaderProgram& program, const GLuint index) const
+void UniformBuffer::AttachToBlock(const Program& program, const GLuint index) const
 {
 	Logger::Debug << "unform buffer bind:" << index << " -> " << bindingIndex <<  '\n';
 
 	glUniformBlockBinding(program.Get(), index, bindingIndex);
 }
+
+}// namspace GL

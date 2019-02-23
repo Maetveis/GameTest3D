@@ -1,12 +1,15 @@
 #ifndef FRAME_PARAMS_H
 #define FRAME_PARAMS_H
 
-#include "../Helper/UniformBuffer.h"
+#include "../Helper/UniformBuffer.hpp"
 #include "../Helper/Buffer.hpp"
 
 #include <glm/glm.hpp>
 
-class ShaderProgram;
+namespace GL
+{
+	class Program;
+}
 
 class FrameParams
 {
@@ -31,7 +34,7 @@ public:
 		return data.proj;
 	}
 
-	void Bind(const ShaderProgram& program);
+	void Bind(const GL::Program& program);
 
 	void Update();
 private:
@@ -43,8 +46,8 @@ private:
 
 	static constexpr const char* blockName = "FrameParams";
 
-	UniformBuffer bindingPoint;
-	Buffer buffer;
+	GL::UniformBuffer bindingPoint;
+	GL::Buffer buffer;
 
 	Data data;
 };

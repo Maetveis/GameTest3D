@@ -1,87 +1,51 @@
 #ifndef BASIC_VERTEX_DESCRIPTOR_HPP
 #define BASIC_VERTEX_DESCRIPTOR_HPP
 
-#include "../../Helper/VertexArrayDescriptor.hpp"
-#include "../../Helper/StaticCounter.hpp"
+#include "../../Helper/VertexArray.hpp"
+#include "../../Helper/VertexArrayBinding.hpp"
 #include "../../Helper/Buffer.hpp"
-#include "BasicVertexFormat.h"
-#include "../ModelCounterTraits.hpp"
+#include "../../Helper/TypeEnum.hpp"
 
-#include "../../Log/Logger.h"
+#include "BasicVertexFormat.h"
 
 #include <cstddef>
 
-class BasicVertexDescriptor
+class BasicVertexDescriptor : public GL::VertexArray
 {
 private:
-	VertexArrayDescriptor descriptor;
-
-	StaticCounter<GLint, VertexBufferBindingPointTrait> counter;
+	GL::VertexArrayBinding binding;
 public:
 	BasicVertexDescriptor()
 	{
 		//First attrribute
-		glEnableVertexArrayAttrib(descriptor.Get(), 0);
-		glVertexArrayAttribFormat(descriptor.Get(), 0, 3, GL_FLOAT, GL_FALSE, 0 );
+		EnableAttrib(0);
+		FormatAttrib(0, 3, GL::TypeEnum<float>::value, false, offsetof(BasicVertexFormat, pos));
+		binding.BindAttrib(*this, 0);
 
 		//Set Second attribute
-		glEnableVertexArrayAttrib(descriptor.Get(), 1);
-		glVertexArrayAttribFormat(descriptor.Get(), 1, 3, GL_FLOAT, GL_FALSE, 12);
+		EnableAttrib(1);
+		FormatAttrib(1, 3, GL::TypeEnum<float>::value, false, offsetof(BasicVertexFormat, norm));
+		binding.BindAttrib(*this, 1);
 
 		//Set Third attribute
-		glEnableVertexArrayAttrib(descriptor.Get(), 2);
-		glVertexArrayAttribFormat(descriptor.Get(), 2, 2, GL_FLOAT, GL_FALSE, 24);
-
-		glVertexArrayAttribBinding(descriptor.Get(), 0, counter);
-		glVertexArrayAttribBinding(descriptor.Get(), 1, counter);
-		glVertexArrayAttribBinding(descriptor.Get(), 2, counter);
+		EnableAttrib(2);
+		FormatAttrib(2, 2, GL::TypeEnum<float>::value, false, offsetof(BasicVertexFormat, uv));
+		binding.BindAttrib(*this, 2);
 	}
 
-	BasicVertexDescriptor(Buffer& vertexBuffer, Buffer& indexBuffer)
+	inline void AttachVertex(const GL::Buffer& buffer)
 	{
-		Bind();
-		vertexBuffer.Bind(GL_ARRAY_BUFFER);
-		indexBuffer.Bind(GL_ELEMENT_ARRAY_BUFFER);
-
-		//Set first attribute
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BasicVertexFormat), (void*)offsetof(BasicVertexFormat, pos));
-
-		//Set Second attribute
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(BasicVertexFormat), (void*)offsetof(BasicVertexFormat, norm));
-
-		//Set Third attribute
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BasicVertexFormat), (void*)offsetof(BasicVertexFormat, uv));
+		binding.BindBuffer(*this, buffer, 0, sizeof(BasicVertexFormat));
 	}
 
-	void AttachVertex(const Buffer& buffer)
+	inline void Bind() const
 	{
-		Logger::Debug << "offsetof(BasicVertexFormat, pos): " << offsetof(BasicVertexFormat, pos) << '\n';
-		Logger::Debug << "offsetof(BasicVertexFormat, norm): " << offsetof(BasicVertexFormat, norm) << '\n';
-		Logger::Debug << "offsetof(BasicVertexFormat, uv): " << offsetof(BasicVertexFormat, uv) << '\n';
-
-		Logger::Debug << "counter " << counter << '\n';
-
-		Logger::Debug << "buffer.GetId(): " << buffer.GetId() << '\n';
-
-		glVertexArrayVertexBuffer(descriptor.Get(), counter, buffer.GetId(), 0, 32); // Check this line if it doesnt work
+		VertexArray::Bind();
 	}
 
-	void AttachIndex(const Buffer& buffer)
+	inline GLint Get() const
 	{
-		glVertexArrayElementBuffer(descriptor.Get(), buffer.GetId());
-	}
-
-	void Bind() const
-	{
-		descriptor.Bind();
-	}
-
-	GLint Get() const
-	{
-		return descriptor.Get();
+		return id;
 	}
 };
 

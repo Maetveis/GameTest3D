@@ -2,7 +2,7 @@
 
 #include "../Log/Logger.h"
 #include "../Main/Game.h"
-#include "../Helper/UniformBuffer.h"
+#include "../Helper/UniformBuffer.hpp"
 #include "../Model/Material/ColorFormat.hpp"
 #include "../Model/ModelLoader.hpp"
 
@@ -49,8 +49,12 @@ bool InGameScene::LoadData()
 
 	ModelLoader loader(vertexBuffer, indexBuffer, program.GetMaterialParams());
 
-	cube = loader.ImportFile("../assets/cube.obj");
-	car = loader.ImportFile("../assets/alfa.obj");
+	if(	!loader.ImportFile("../assets/cube.obj", cube)
+		|| !loader.ImportFile("../assets/alfa.obj", car))
+	{
+		Logger::Error << "Model loading failed\n";
+		return false;
+	}
 
 	return true;
 }

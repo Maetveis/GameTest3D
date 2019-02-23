@@ -14,28 +14,3 @@ void ScaledDeltaTimer::Update()
 	scaledDelta = unscaledDelta * timeScale;
 	lastFrameTime = ticks;
 }
-
-void ScaledDeltaTimer::SetScaleFactor(double newScale)
-{
-	timeScale = newScale;
-}
-
-double ScaledDeltaTimer::GetScaleFactor() const
-{
-	return timeScale;
-}
-
-double ScaledDeltaTimer::GetScaledTime() const
-{
-	return scaledDelta;
-}
-
-double ScaledDeltaTimer::GetUnscaledTime() const
-{
-	return unscaledDelta;
-}
-
-std::uint32_t ScaledDeltaTimer::GetFrameStart() const
-{
-	return lastFrameTime;
-}
