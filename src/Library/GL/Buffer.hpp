@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <vector>
 
-#include "../Log/Logger.h"
+#include "../Logger/Logger.hpp"
 
 namespace GL {
 

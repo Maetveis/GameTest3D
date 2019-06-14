@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 #include <vector>
 
-#include "StaticCounter.hpp"
-#include "../Log/Logger.h"
+#include "../StaticCounter.hpp"
+#include "../Logger/Logger.hpp"
 
 namespace GL {
 

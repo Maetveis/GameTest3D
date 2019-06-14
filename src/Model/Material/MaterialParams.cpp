@@ -1,5 +1,5 @@
 #include "MaterialParams.h"
-#include "../../Helper/Program.hpp"
+#include "../../Library/GL/Program.hpp"
 
 void MaterialParams::Bind(const GL::Program& program)
 {

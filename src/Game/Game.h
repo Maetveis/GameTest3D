@@ -1,11 +1,16 @@
 #include "ScaledDeltaTimer.h"
 #include "../Manager/SceneManager.h"
-#include "../Manager/WindowManager.h"
+
+namespace SDL
+{
+	class GLWindow;
+}
 
 class Game
 {
 public:
 	Game();
+	~Game();
 	void Run();
 
 	bool running;
@@ -19,7 +24,7 @@ private:
 	void DelayFrameTime(const unsigned frameStart, const unsigned short targetFPS);
 
 	SceneManager sceneManager;
-	WindowManager windowManager;
+	std::unique_ptr<SDL::GLWindow> mainWindow;
 	ScaledDeltaTimer timer;
 	unsigned short targetFPS = 60;
 };

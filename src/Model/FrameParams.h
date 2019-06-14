@@ -1,8 +1,8 @@
 #ifndef FRAME_PARAMS_H
 #define FRAME_PARAMS_H
 
-#include "../Helper/UniformBuffer.hpp"
-#include "../Helper/Buffer.hpp"
+#include "../Library/GL/UniformBuffer.hpp"
+#include "../Library/GL/Buffer.hpp"
 
 #include <glm/glm.hpp>
 

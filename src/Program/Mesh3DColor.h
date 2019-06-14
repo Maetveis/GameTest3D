@@ -1,7 +1,7 @@
 #ifndef MESH_3D_COLOR_H
 #define MESH_3D_COLOR_H
 
-#include "../Helper/Program.hpp"
+#include "../Library/GL/Program.hpp"
 #include "../Model/FrameParams.h"
 #include "../Model/Material/MaterialParams.h"
 #include "../Model/LightParams.h"

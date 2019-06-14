@@ -1,6 +1,6 @@
 #include "ModelLoader.hpp"
 
-#include "../Log/Logger.h"
+#include "../Library/Logger/Logger.hpp"
 #include "Material/MaterialParams.h"
 
 #include <assimp/Importer.hpp>

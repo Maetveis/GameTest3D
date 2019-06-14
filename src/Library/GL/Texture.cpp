@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-#include "../Log/Logger.h"
+#include "../Logger/Logger.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

@@ -1,12 +1,25 @@
-#include "GlewInit.h"
+#include "Init.hpp"
 
-#include "../Log/Logger.h"
+#include "../Logger/Logger.hpp"
 
-#include <GL/glew.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
 
-bool GlewInit::InitContext()
+namespace SDL
+{
+
+bool Init()
+{
+	//Initializing SDL
+	if(SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0)
+	{
+		Logger::Error() << "Couldn't initialize SDL: " << SDL_GetError() << '\n';
+		return false;
+	}
+
+	return true;
+}
+
+bool InitGLContext()
 {
 	// Setting up SDL_OPENGL Attributes
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -37,17 +50,4 @@ bool GlewInit::InitContext()
 	return true;
 }
 
-bool GlewInit::InitGlew()
-{
-	// Starting Glew
-	GLenum error = glewInit();
-	if ( error != GLEW_OK )
-	{
-		Logger::Error() << "Glew Init failed: " << glewGetErrorString(error) << '\n';
-		return false;
-	}
-
-	Logger::Info() << "Opengl version: " << glGetString(GL_VERSION) << '\n';
-
-	return true;
-}
+} //namespace SDL

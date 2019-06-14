@@ -1,7 +1,7 @@
 #ifndef MATERIAL_PARAMS_H
 #define MATERIAL_PARAMS_H
 
-#include "../../Helper/UniformBuffer.hpp"
+#include "../../Library/GL/UniformBuffer.hpp"
 #include "../../DataStore/ManagedBuffer.hpp"
 
 #include "ColorFormat.hpp"

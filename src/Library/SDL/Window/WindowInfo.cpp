@@ -2,6 +2,10 @@
 
 #include <SDL2/SDL.h>
 
+namespace SDL
+{
+
+
 WindowInfo::WindowInfo() :
 	title(""),
 	x(SDL_WINDOWPOS_UNDEFINED),
@@ -59,3 +63,5 @@ void WindowInfo::SetResizable(bool val)
 		flags &= SDL_WINDOW_RESIZABLE ^ 1;
 	}
 }
+
+} //namespace SDL

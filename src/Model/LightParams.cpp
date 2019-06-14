@@ -1,5 +1,5 @@
 #include "LightParams.h"
-#include "../Helper/Program.hpp"
+#include "../Library/GL/Program.hpp"
 
 void LightParams::Update()
 {

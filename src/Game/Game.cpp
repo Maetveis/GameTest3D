@@ -1,11 +1,16 @@
 #include "Game.h"
 
 #include "../Scene/InGameScene.h"
-#include "../Log/Logger.h"
-#include "../Init/SDLInit.h"
-#include "../Model/WindowInfo.h"
 
-#include "../Helper/StaticCounter.hpp"
+#include "../Library/Logger/Logger.hpp"
+
+#include "../Library/SDL/Init.hpp"
+#include "../Library/SDL/Window/WindowInfo.h"
+#include "../Library/SDL/Window/GLWindow.hpp"
+
+#include "../Library/StaticCounter.hpp"
+
+#include "../Library/GL/Init.hpp"
 
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -54,15 +59,18 @@ void LogGLDebug(GLenum source, GLenum type, GLuint id,
 
 bool Game::Init()
 {
-	if (!SDLInit::Init())
+	if (!SDL::Init())
 		return false;
 
-	if(!windowManager.Init())
+	if(!SDL::InitGLContext())
 		return false;
 
-	WindowInfo info;
+	SDL::WindowInfo info;
 	info.SetTitle("asd dev");
-	windowManager.SpawnWindow(info);
+	mainWindow = std::make_unique<SDL::GLWindow>(info);
+
+	if(!GL::InitGlew())
+		return false;
 
 	//Enable opengl debug output
 	glDebugMessageCallback(LogGLDebug, nullptr);
@@ -169,7 +177,7 @@ void Game::Render()
 {
 	sceneManager->PrepareRender();
 	sceneManager->Render();
-	windowManager.PresentWindow();
+	mainWindow->Present();
 }
 
 void Game::DelayFrameTime(const unsigned frameStart, const unsigned short targetFPS)
@@ -186,4 +194,8 @@ void Game::DelayFrameTime(const unsigned frameStart, const unsigned short target
 void Game::Destroy()
 {
 	SDL_Quit();
+}
+
+Game::~Game()
+{
 }

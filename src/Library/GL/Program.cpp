@@ -2,7 +2,7 @@
 
 #include "Shader.hpp"
 
-#include "../Log/Logger.h"
+#include "../Logger/Logger.hpp"
 
 #include <fstream>
 

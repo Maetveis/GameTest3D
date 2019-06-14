@@ -1,8 +1,8 @@
 #ifndef LIGHT_PARAMS_H
 #define LIGHT_PARAMS_H
 
-#include "../Helper/UniformBuffer.hpp"
-#include "../Helper/Buffer.hpp"
+#include "../Library/GL/UniformBuffer.hpp"
+#include "../Library/GL/Buffer.hpp"
 
 #include <glm/glm.hpp>
 
@@ -10,7 +10,7 @@
 namespace GL {
 
 	class Program;
-	
+
 }
 
 struct Light

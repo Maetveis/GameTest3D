@@ -1,10 +1,10 @@
 #ifndef BASIC_VERTEX_DESCRIPTOR_HPP
 #define BASIC_VERTEX_DESCRIPTOR_HPP
 
-#include "../../Helper/VertexArray.hpp"
-#include "../../Helper/VertexArrayBinding.hpp"
-#include "../../Helper/Buffer.hpp"
-#include "../../Helper/TypeEnum.hpp"
+#include "../../Library/GL/VertexArray.hpp"
+#include "../../Library/GL/VertexArrayBinding.hpp"
+#include "../../Library/GL/Buffer.hpp"
+#include "../../Library/GL/TypeEnum.hpp"
 
 #include "BasicVertexFormat.h"
 

@@ -2,7 +2,7 @@
 #define MANAGED_BUFFER_HPP
 
 #include "GPUAllocator.hpp"
-#include "../Helper/Buffer.hpp"
+#include "../Library/GL/Buffer.hpp"
 
 class ManagedBuffer
 {

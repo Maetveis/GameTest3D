@@ -5,7 +5,7 @@
 #include "Mesh/BasicVertexFormat.h"
 #include "RigidModel.hpp"
 
-#include "../Helper/TypeEnum.hpp"
+#include "../Library/GL/TypeEnum.hpp"
 
 #include <vector>
 #include <string>

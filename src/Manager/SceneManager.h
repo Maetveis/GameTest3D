@@ -4,7 +4,7 @@
 #include <memory>
 #include <stack>
 
-#include "../Main/GameComponent.h"
+#include "../Game/GameComponent.h"
 
 struct Scene;
 

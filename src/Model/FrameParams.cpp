@@ -1,7 +1,7 @@
 #include "FrameParams.h"
 
-#include "../Helper/Program.hpp"
-#include "../Log/Logger.h"
+#include "../Library/GL/Program.hpp"
+#include "../Library/Logger/Logger.hpp"
 
 void FrameParams::Bind(const GL::Program& program)
 {
