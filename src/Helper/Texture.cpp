@@ -5,10 +5,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+namespace GL {
+
 void Texture::FromFile(GLenum target, const std::string fileName)
 {
-	CreateName(target);
-
 	SDL_Surface* loaded_img = IMG_Load(fileName.c_str());
 	if(loaded_img == nullptr)
 	{
@@ -17,6 +17,7 @@ void Texture::FromFile(GLenum target, const std::string fileName)
 	}
 
 	FromSurface(loaded_img);
+	SDL_FreeSurface(loaded_img);
 }
 
 void Texture::FromSurface(const SDL_Surface* surface, GLint level)
@@ -38,3 +39,5 @@ void Texture::FromSurface(const SDL_Surface* surface, GLint level)
 	glTextureStorage2D(textureID, 1, GL_RGBA, surface->w, surface->h);
 	glTextureSubImage2D(textureID, level, 0, 0, surface->w, surface->h, img_mode, GL_UNSIGNED_BYTE, surface->pixels);
 }
+
+} //namespace GL

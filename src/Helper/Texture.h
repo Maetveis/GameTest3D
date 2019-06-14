@@ -6,6 +6,8 @@
 
 struct SDL_Surface;
 
+namespace GL {
+
 class Texture
 {
 public:
@@ -13,20 +15,9 @@ public:
 	{
 	}
 
-	explicit Texture(GLenum target)
+	inline explicit Texture(GLenum target)
 	{
-		CreateName(target);
-	}
-
-	Texture(GLenum target, const SDL_Surface* surface) :
-		Texture(target)
-	{
-		FromSurface(surface);
-	}
-
-	Texture(GLenum target, const std::string fileName)
-	{
-		FromFile(target, fileName);
+		glCreateTextures(target, 1, &textureID);
 	}
 
 	Texture(const Texture&) = delete;
@@ -37,47 +28,39 @@ public:
 
 	void FromSurface(const SDL_Surface* surface, GLint level = 0);
 
-	void SetMinFilter(GLenum filter)
+	inline void SetMinFilter(GLenum filter)
 	{
 		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, filter);
 	}
 
-	void SetMagFilter(GLenum filter)
+	inline void SetMagFilter(GLenum filter)
 	{
 		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, filter);
 	}
 
-	void GenerateMipmap()
+	inline void GenerateMipmap()
 	{
 		glGenerateTextureMipmap(textureID);
 	}
 
-	void SetName(GLuint name)
-	{
-		textureID = name;
-	}
-
-	GLuint GetName() const
+	inline GLuint GetId() const
 	{
 		return textureID;
 	}
 
-	void CreateName(GLenum target)
-	{
-		glCreateTextures(target, 1, &textureID);
-	}
-
-	void Bind(GLuint unit)
+	inline void Bind(GLuint unit)
 	{
 		glBindTextureUnit(GL_TEXTURE0 + unit, textureID);
 	}
 
-	~Texture()
+	inline ~Texture()
 	{
 		glDeleteTextures(1, &textureID);
 	}
 private:
 	GLuint textureID;
 };
+
+} //namespace GL
 
 #endif //TEXTURE_H

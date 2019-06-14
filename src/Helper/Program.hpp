@@ -3,11 +3,9 @@
 
 #include <GL/glew.h>
 #include <string>
+#include <memory>
 
-namespace GL
-{
-	class Shader;
-}
+#include "Shader.hpp"
 
 namespace GL
 {
@@ -19,49 +17,95 @@ private:
 public:
 	Program() = default;
 
-	void CreateName();
+	inline void CreateName()
+	{
+		programID = glCreateProgram();
+	}
 
-	explicit Program(GLuint p);
+	inline explicit Program(GLuint p) :
+		programID(p)
+	{
+	}
 
-	~Program()
+	inline ~Program()
 	{
 		Destroy();
 	}
 
-	GLuint Get() const
+	inline GLuint Get() const
 	{
 		return programID;
 	}
 
-	GLuint operator*() const
+	inline GLuint operator*() const
 	{
 		return programID;
 	}
 
-	operator bool ()
+	inline operator bool ()
 	{
 		GLint result;
 		glGetProgramiv(programID, GL_LINK_STATUS, &result);
 		return result == GL_TRUE;
 	}
 
-	bool operator ! ()
+	inline bool operator ! ()
 	{
 		GLint result;
 		glGetProgramiv(programID, GL_LINK_STATUS, &result);
 		return result != GL_TRUE;
 	}
 
-	GLuint GetUniformLocation(const char* name) const;
-	GLuint GetUniformBlockIndex(const char* name) const;
+	inline GLuint GetUniformLocation(const char* name) const
+	{
+		return glGetUniformLocation(programID, name);
+	}
 
-	void AttachShader(const Shader& shader);
-	bool Link();
-	void Use() const;
-	void Unuse() const;
-	void Destroy();
+	inline GLuint GetUniformBlockIndex(const char* name) const
+	{
+		return glGetUniformBlockIndex(programID, name);
+	}
 
-	std::string GetInfoLog();
+	inline void AttachShader(const Shader& shader)
+	{
+		glAttachShader(programID, shader.GetId());
+	}
+
+	inline bool Link()
+	{
+		GLint result = GL_FALSE;
+
+		glLinkProgram(programID);
+		glGetProgramiv(programID, GL_LINK_STATUS, &result);
+
+		return result == GL_TRUE;
+	}
+
+	inline void Use() const
+	{
+		glUseProgram(programID);
+	}
+
+	inline void Unuse() const
+	{
+		glUseProgram(0);
+	}
+
+	inline void Destroy()
+	{
+		glDeleteProgram(programID);
+	}
+
+	inline std::string GetInfoLog()
+	{
+		GLint infoLogLength;
+		glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+		std::unique_ptr<char> errorMessage(new char[infoLogLength]);
+		glGetProgramInfoLog(programID, infoLogLength, NULL, errorMessage.get());
+
+		return std::string(errorMessage.get());
+	}
 
 	bool VsFsProgram( 	const std::string& vertexShaderName,
 						const std::string& fragmentShaderName);
