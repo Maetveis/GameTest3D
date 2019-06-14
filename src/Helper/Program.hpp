@@ -15,11 +15,13 @@ class Program
 private:
 	GLuint programID;
 public:
-	Program() = default;
+	Program()
+	{
+		programID = glCreateProgram();
+	}
 
 	inline void CreateName()
 	{
-		programID = glCreateProgram();
 	}
 
 	inline explicit Program(GLuint p) :
@@ -64,6 +66,11 @@ public:
 	inline GLuint GetUniformBlockIndex(const char* name) const
 	{
 		return glGetUniformBlockIndex(programID, name);
+	}
+
+	inline GLuint GetShaderStorageBlockIndex(const char* name) const
+	{
+		return glGetProgramResourceIndex(programID, GL_SHADER_STORAGE_BLOCK, name);
 	}
 
 	inline void AttachShader(const Shader& shader)

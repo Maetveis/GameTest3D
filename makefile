@@ -27,7 +27,8 @@ SRCS := DataStore/GPUAllocator.cpp \
 	Init/SDLInit.cpp Init/GlewInit.cpp \
 	Manager/WindowManager.cpp Manager/SceneManager.cpp \
 	Helper/Program.cpp Helper/UniformBuffer.cpp Helper/Shader.cpp Helper/Utility.cpp \
-	Program/Mesh3DColor.cpp
+	Program/Mesh3DColor.cpp \
+	Log/Logger.cpp	
 
 OBJNAMES := $(SRCS:.cpp=.o)
 OBJS := $(addprefix $(OBJDIR)/,$(OBJNAMES))

@@ -33,6 +33,25 @@ void Game::Run()
 	Destroy();
 }
 
+void LogGLDebug(GLenum source, GLenum type, GLuint id,
+	GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	switch (severity) {
+		case GL_DEBUG_SEVERITY_HIGH:
+			Logger::Error() << "Opengl: " << message << '\n';
+			break;
+		case GL_DEBUG_SEVERITY_MEDIUM:
+			Logger::Warning() << "Opengl: " << message << '\n';
+			break;
+		case GL_DEBUG_SEVERITY_LOW:
+			Logger::Warning() << "Opengl low warning: " << message << '\n';
+			break;
+		case GL_DEBUG_SEVERITY_NOTIFICATION:
+			Logger::Info() << "Opengl notification: " << message << '\n';
+			break;
+	}
+}
+
 bool Game::Init()
 {
 	if (!SDLInit::Init())
@@ -44,6 +63,9 @@ bool Game::Init()
 	WindowInfo info;
 	info.SetTitle("asd dev");
 	windowManager.SpawnWindow(info);
+
+	//Enable opengl debug output
+	glDebugMessageCallback(LogGLDebug, nullptr);
 
 	//Starting main Scene
 	sceneManager.AttachGame(this);
