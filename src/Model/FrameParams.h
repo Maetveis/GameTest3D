@@ -1,7 +1,7 @@
 #ifndef FRAME_PARAMS_H
 #define FRAME_PARAMS_H
 
-#include "../Library/GL/UniformBuffer.hpp"
+#include "../Library/GL/UniformBinding.hpp"
 #include "../Library/GL/Buffer.hpp"
 
 #include <glm/glm.hpp>
@@ -46,7 +46,7 @@ private:
 
 	static constexpr const char* blockName = "FrameParams";
 
-	GL::UniformBuffer bindingPoint;
+	GL::UniformBinding bindingPoint;
 	GL::Buffer buffer;
 
 	Data data;

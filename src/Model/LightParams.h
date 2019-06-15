@@ -1,7 +1,7 @@
 #ifndef LIGHT_PARAMS_H
 #define LIGHT_PARAMS_H
 
-#include "../Library/GL/UniformBuffer.hpp"
+#include "../Library/GL/UniformBinding.hpp"
 #include "../Library/GL/Buffer.hpp"
 
 #include <glm/glm.hpp>
@@ -57,7 +57,7 @@ public:
 private:
 	static constexpr const char* blockName = "LightParams";
 
-	GL::UniformBuffer bindingPoint;
+	GL::UniformBinding bindingPoint;
 	GL::Buffer buffer;
 
 	struct Data

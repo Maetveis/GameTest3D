@@ -1,39 +1,23 @@
 #ifndef GPU_ALLOCATOR_HPP
 #define GPU_ALLOCATOR_HPP
 
+#include "../Library/GL/Range.hpp"
+
 #include <GL/glew.h>
 #include <set>
+
+struct BufferOutOfMemoryException
+{
+};
 
 class GPUAllocator
 {
 private:
 	GLuint max;
 
-	struct Hole
-	{
-		GLuint offset;
-		GLuint size;
-
-		Hole(GLuint _offset, GLuint _size = 0) :
-			offset(_offset),
-			size(_size)
-		{
-		}
-
-		bool operator==(const Hole& rhs)
-		{
-			return offset == rhs.offset && size == rhs.size;
-		}
-
-		bool operator!=(const Hole& rhs)
-		{
-			return offset != rhs.offset || size != rhs.size;
-		}
-	};
-
 	struct ByOffset
 	{
-		inline bool operator()(const Hole& lhs, const Hole& rhs) const
+		inline bool operator()(const GL::Range& lhs, const GL::Range& rhs) const
 		{
 			return lhs.offset < rhs.offset;
 		}
@@ -41,22 +25,22 @@ private:
 
 	struct ByLength
 	{
-		inline bool operator()(const Hole& lhs, const Hole& rhs) const
+		inline bool operator()(const GL::Range& lhs, const GL::Range& rhs) const
 		{
 			return lhs.size < rhs.size;
 		}
 	};
 
-	std::set<Hole, ByOffset> holesByOffset;
-	std::set<Hole, ByLength> holesByLength;
+	std::set<GL::Range, ByOffset> holesByOffset;
+	std::set<GL::Range, ByLength> holesByLength;
 
 	void AddHole(GLuint offset, GLuint size);
 public:
 	GPUAllocator(GLuint max);
 	~GPUAllocator();
 
-	bool Allocate(GLuint size, GLuint alignment, GLuint* value);
-	void DeAllocate(GLuint offset, GLuint length);
+	GL::Range Allocate(GLuint size, GLuint alignment);
+	void DeAllocate(GL::Range place);
 
 	GLuint GetSize() const
 	{

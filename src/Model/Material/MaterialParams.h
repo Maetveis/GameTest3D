@@ -1,7 +1,7 @@
 #ifndef MATERIAL_PARAMS_H
 #define MATERIAL_PARAMS_H
 
-#include "../../Library/GL/UniformBuffer.hpp"
+#include "../../Library/GL/UniformBinding.hpp"
 #include "../../DataStore/ManagedBuffer.hpp"
 
 #include "ColorFormat.hpp"
@@ -15,7 +15,7 @@ class MaterialParams
 {
 public:
 	MaterialParams() :
-		buffer(30000, GL_STATIC_DRAW)
+		uniformBuffer(30000, GL_STATIC_DRAW)
 	{
 	}
 
@@ -29,8 +29,8 @@ private:
 
 	std::vector<Material> materials;
 
-	GL::UniformBuffer bindingIndex;
-	ManagedBuffer buffer;
+	GL::UniformBinding uniformBinding;
+	ManagedBuffer uniformBuffer;
 };
 
 #endif //MATERIAL_PARAMS_H

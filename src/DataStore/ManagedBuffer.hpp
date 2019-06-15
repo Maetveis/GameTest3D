@@ -3,6 +3,7 @@
 
 #include "GPUAllocator.hpp"
 #include "../Library/GL/Buffer.hpp"
+#include "../Library/GL/Range.hpp"
 
 class ManagedBuffer
 {
@@ -16,45 +17,42 @@ public:
 		buffer.BufferData(size, nullptr, usage);
 	}
 
-	GLuint Reserve(GLuint size, GLuint alignment)
+	GL::Range Reserve(GLuint size, GLuint alignment)
 	{
-		GLuint offset = Allocate(size, alignment);
-		buffer.BufferSubData(offset, size, nullptr);
+		GL::Range range = Allocate(size, alignment);
+		buffer.BufferSubData(range.offset, range.size, nullptr);
 
-		return offset;
+		return range;
 	}
 
-	GLuint Push(GLuint size, void const * data, GLuint alignment)
+	GL::Range Push(GLuint size, void const * data, GLuint alignment)
 	{
-		GLuint offset = Allocate(size, alignment);
-		buffer.BufferSubData(offset, size, data);
+		GL::Range range = Allocate(size, alignment);
+		buffer.BufferSubData(range.offset, range.size, data);
 
-		return offset;
+		return range;
 	}
 
 	template <typename T>
-	GLuint Push(const T& data, GLuint alignment)
+	GL::Range Push(const T& data, GLuint alignment)
 	{
 		return Push(sizeof(data), &data, alignment);
 	}
 
 	template <typename T>
-	GLuint Push(const std::vector<T>& data, GLuint alignment)
+	GL::Range Push(const std::vector<T>& data, GLuint alignment)
 	{
 		return Push(sizeof(data[0]) * data.size(), data.data(), alignment);
 	}
 
-	GLuint Allocate(GLuint size, GLuint alignment)
+	GL::Range Allocate(GLuint size, GLuint alignment)
 	{
-		GLuint offset;
-		allocator.Allocate(size, alignment, &offset);
-
-		return offset;
+		return allocator.Allocate(size, alignment);
 	}
 
-	void Free(GLuint offset, GLuint length)
+	void Free(GL::Range range)
 	{
-		allocator.DeAllocate(offset, length);
+		allocator.DeAllocate(range);
 	}
 
 	GL::Buffer& GetBuffer()
@@ -63,6 +61,16 @@ public:
 	}
 
 	const GL::Buffer& GetBuffer() const
+	{
+		return buffer;
+	}
+
+	operator GL::Buffer& ()
+	{
+		return buffer;
+	}
+
+	operator const GL::Buffer& () const
 	{
 		return buffer;
 	}

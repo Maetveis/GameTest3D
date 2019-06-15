@@ -17,6 +17,11 @@ class aiMesh;
 class Mesh3D;
 class MaterialParams;
 
+namespace GL
+{
+	class Range;
+}
+
 class ModelLoader
 {
 private:
@@ -25,10 +30,10 @@ private:
 	MaterialParams& materialParams;
 
 	template <typename T>
-	void HandleIndices(const aiMesh& mesh, RigidModel& model, const std::pair<GLuint, GLuint>& vertex);
+	void HandleIndices(const aiMesh& mesh, RigidModel& model, GL::Range vertexRange);
 
-	std::pair<GLuint, GLuint> InsertVertices(const std::vector<BasicVertexFormat>& vertices);
-	GLuint InsertIndices (GLuint size, const void* data, GLuint alignment);
+	GL::Range InsertVertices(const std::vector<BasicVertexFormat>& vertices);
+	GL::Range InsertIndices (GLuint size, const void* data, GLuint alignment);
 
 	template <typename T>
 	std::vector<T> GetIndices(const aiMesh& mesh);

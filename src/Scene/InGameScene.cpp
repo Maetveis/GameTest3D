@@ -2,7 +2,7 @@
 
 #include "../Library/Logger/Logger.hpp"
 #include "../Game/Game.h"
-#include "../Library/GL/UniformBuffer.hpp"
+#include "../Library/GL/UniformBinding.hpp"
 #include "../Model/Material/ColorFormat.hpp"
 #include "../Model/ModelLoader.hpp"
 

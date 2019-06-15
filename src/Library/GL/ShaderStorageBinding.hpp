@@ -1,5 +1,5 @@
-#ifndef SHADER_STORAGE_HPP
-#define SHADER_STORAGE_HPP
+#ifndef GL_SHADER_STORAGE_BINDING_HPP
+#define GL_SHADER_STORAGE_BINDING_HPP
 
 #include <GL/glew.h>
 
@@ -10,16 +10,17 @@ namespace GL
 {
 	class Program;
 	class Buffer;
+	class Range;
 }
 
 namespace GL {
 
-class ShaderStorage
+class ShaderStorageBinding
 {
 private:
-	StaticCounter<GLuint, ShaderStorage> bindingIndex;
+	StaticCounter<GLuint, ShaderStorageBinding> bindingIndex;
 public:
-	ShaderStorage()
+	ShaderStorageBinding()
 	{
 		Logger::Debug() << "Created shader storage buffer with binding index: " << bindingIndex.Get() << '\n';
 	}
@@ -28,7 +29,7 @@ public:
 
 	void AttachBuffer(const Buffer& buffer);
 
-	void AttachBufferRange(const Buffer& buffer, GLuint offset, GLuint size);
+	void AttachBufferRange(const Buffer& buffer, GL::Range range);
 
 	GLuint GetBlockBinding() const
 	{
@@ -38,4 +39,4 @@ public:
 
 } //namespace GL
 
-#endif //SHADER_STORAGE_HPP
+#endif //GL_SHADER_STORAGE_BINDING_HPP

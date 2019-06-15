@@ -1,27 +1,22 @@
 #ifndef MATERIAL_HPP
 
+#include "../../Library/GL/Range.hpp"
+
 #include <GL/glew.h>
 
 class Material
 {
 private:
-	GLuint offset;
-	GLuint size;
+	GL::Range location;
 public:
-	Material(GLuint _offset, GLuint _size) :
-		offset(_offset),
-		size(_size)
+	Material(GL::Range _location) :
+		location(_location)
 	{
 	}
 
-	GLuint GetOffset()
+	GL::Range GetLocation() const
 	{
-		return offset;
-	}
-
-	GLuint GetSize()
-	{
-		return size;
+		return location;
 	}
 };
 

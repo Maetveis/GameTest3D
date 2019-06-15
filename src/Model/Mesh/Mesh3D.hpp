@@ -1,21 +1,22 @@
 #ifndef MESH3D_H
 #define MESH3D_H
 
+#include "../../Library/GL/Range.hpp"
+
 #include <GL/glew.h>
 
 class Mesh3D
 {
 private:
-	GLint vertexOffset;
-	GLuint vertexSize; // size taken on vertex buffer for deallocation
+	GL::Range vertexRange;
+	GL::Range indexRange;
 
-	void* indexPointer;
 	GLuint indexCount;
 
 	GLenum type;
 
 public:
-	Mesh3D(GLint _vertexOffset, GLuint _vertexSize, void* _indexPointer, GLuint _indexCount, GLenum _type = GL_UNSIGNED_SHORT);
+	Mesh3D(GL::Range _vertexRange, GL::Range _indexRange, GLuint _indexCount ,GLenum _type = GL_UNSIGNED_SHORT);
 
 	Mesh3D(const Mesh3D&) = delete;
 	Mesh3D(Mesh3D&&) = default;
@@ -26,10 +27,9 @@ public:
 
 	void Draw() const;
 
-	GLint GetOffset() const;
-	GLuint GetSize() const;
-	void * GetIndexPointer() const;
-	GLuint GetCount() const;
+	GL::Range GetVertexRange() const;
+	GL::Range GetIndexRange() const;
+	GLuint GetIndexCount() const;
 };
 
 #endif //MESH3D_H

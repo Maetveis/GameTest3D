@@ -11,7 +11,7 @@ GPUAllocator::~GPUAllocator()
 {
 }
 
-bool GPUAllocator::Allocate(GLuint size, GLuint alignment, GLuint* value)
+GL::Range GPUAllocator::Allocate(GLuint size, GLuint alignment)
 {
 	GLuint alignOffset;
 	auto iter = holesByLength.lower_bound(size);
@@ -23,19 +23,17 @@ bool GPUAllocator::Allocate(GLuint size, GLuint alignment, GLuint* value)
 		++iter;
 	}
 	if(iter == holesByLength.end())
-		return false;
+		throw BufferOutOfMemoryException();
 
 	if(alignOffset > 0)
 		AddHole(iter->offset, alignOffset);
 	if(alignOffset + size < iter->size)
 		AddHole(iter->offset + alignOffset + size, iter->size - alignOffset - size);
 
-	holesByOffset.erase(Hole(iter->offset, iter->size));
+	holesByOffset.erase(GL::Range(iter->offset, iter->size));
 	holesByLength.erase(iter);
 
-	*value = iter->offset + alignOffset;
-
-	return true;
+	return GL::Range(iter->offset + alignOffset, size);
 };
 
 void GPUAllocator::AddHole(GLuint offset, GLuint size)
@@ -44,27 +42,27 @@ void GPUAllocator::AddHole(GLuint offset, GLuint size)
 	holesByOffset.emplace(offset, size);
 }
 
-void GPUAllocator::DeAllocate(GLuint offset, GLuint size)
+void GPUAllocator::DeAllocate(GL::Range allocation)
 {
-	GLuint newOffset = offset, newSize = size;
+	GLuint newOffset = allocation.offset, newSize = allocation.size;
 
-	auto before = holesByOffset.lower_bound(Hole(offset, size));
+	auto before = holesByOffset.lower_bound(allocation);
 	--before;
-	if(before != holesByOffset.end() && before->offset + before->size >= offset)
+	if(before != holesByOffset.end() && before->offset + before->size >= allocation.offset)
 	{
 		newOffset = before->offset;
 		newSize += before->size;
 
-		holesByLength.erase(Hole(before->offset, before->size));
+		holesByLength.erase(GL::Range(before->offset, before->size));
 		holesByOffset.erase(before);
 	}
 
-	auto after = holesByOffset.upper_bound(Hole(offset, size));
-	if(after != holesByOffset.end() && offset + size >= after->offset)
+	auto after = holesByOffset.upper_bound(allocation);
+	if(after != holesByOffset.end() && allocation.offset + allocation.size >= after->offset)
 	{
 		newSize += after->size;
 
-		holesByLength.erase(Hole(after->offset, after->size));
+		holesByLength.erase(GL::Range(after->offset, after->size));
 		holesByOffset.erase(after);
 	}
 

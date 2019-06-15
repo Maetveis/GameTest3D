@@ -31,15 +31,15 @@ bool ModelLoader::ImportFile(const std::string& filename, RigidModel& newModel)
 
 	for(unsigned int i = 0; i < scene->mNumMeshes; ++i)
 	{
-		std::pair<GLuint, GLuint> vertex = InsertVertices(GetVertices(*scene->mMeshes[i]));
+		GL::Range vertexRange = InsertVertices(GetVertices(*scene->mMeshes[i]));
 		newModel.materials.emplace_back(materialParams.Push(ColorFormat(glm::sphericalRand<float>(1.) + glm::vec3(.4, .4, .4), glm::sphericalRand<float>(1.), glm::sphericalRand(1.),  30)));
 
 		if(scene->mMeshes[i]->mNumVertices < std::numeric_limits<GLubyte>::max())
-			HandleIndices<GLubyte>(*scene->mMeshes[i], newModel, vertex);
+			HandleIndices<GLubyte>(*scene->mMeshes[i], newModel, vertexRange);
 		else if (scene->mMeshes[i]->mNumVertices < std::numeric_limits<GLushort>::max())
-			HandleIndices<GLushort>(*scene->mMeshes[i], newModel, vertex);
+			HandleIndices<GLushort>(*scene->mMeshes[i], newModel, vertexRange);
 		else
-			HandleIndices<GLuint>(*scene->mMeshes[i], newModel, vertex);
+			HandleIndices<GLuint>(*scene->mMeshes[i], newModel, vertexRange);
 	}
 
 	Logger::Debug() << "Successfully loaded " << filename << '\n';
@@ -48,26 +48,21 @@ bool ModelLoader::ImportFile(const std::string& filename, RigidModel& newModel)
 }
 
 template <typename T>
-void ModelLoader::HandleIndices(const aiMesh& mesh, RigidModel& model, const std::pair<GLuint, GLuint>& vertex)
+void ModelLoader::HandleIndices(const aiMesh& mesh, RigidModel& model, GL::Range vertexRange)
 {
 	std::vector<T> vec = GetIndices<T>(mesh);
-	GLuint indexOffset = InsertIndices(vec.size() * sizeof(T), vec.data(), sizeof(T));
-	model.meshes.emplace_back(vertex.first, (GLint) vertex.second, (char*)(0) + indexOffset, vec.size(), GL::TypeEnum<T>::value);
+	GL::Range indexRange = InsertIndices(vec.size() * sizeof(T), vec.data(), sizeof(T));
+	model.meshes.emplace_back(vertexRange, indexRange, vec.size(), GL::TypeEnum<T>::value);
 }
 
-GLuint ModelLoader::InsertIndices (GLuint size, const void* data, GLuint alignment)
+GL::Range ModelLoader::InsertIndices (GLuint size, const void* data, GLuint alignment)
 {
-	GLuint offset = indexBuffer.Push(size, data, alignment);
-
-	return offset;
+	return indexBuffer.Push(size, data, alignment);
 }
 
-std::pair<GLuint, GLuint> ModelLoader::InsertVertices(const std::vector<BasicVertexFormat>& vertices)
+GL::Range ModelLoader::InsertVertices(const std::vector<BasicVertexFormat>& vertices)
 {
-	GLuint vertexSize = static_cast<GLuint> (vertices.size() * sizeof(BasicVertexFormat));
-	GLuint offset = vertexBuffer.Push(vertices, sizeof(BasicVertexFormat));
-
-	return std::make_pair(offset / sizeof(BasicVertexFormat), vertexSize);
+	return vertexBuffer.Push(vertices, sizeof(BasicVertexFormat));
 }
 
 template <typename T>
