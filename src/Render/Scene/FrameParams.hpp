@@ -1,8 +1,8 @@
-#ifndef FRAME_PARAMS_H
-#define FRAME_PARAMS_H
+#ifndef RENDER_FRAME_PARAMS_H
+#define RENDER_FRAME_PARAMS_H
 
-#include "../Library/GL/UniformBinding.hpp"
-#include "../Library/GL/Buffer.hpp"
+#include "../../Library/GL/UniformBinding.hpp"
+#include "../../Library/GL/Buffer.hpp"
 
 #include <glm/glm.hpp>
 
@@ -10,6 +10,9 @@ namespace GL
 {
 	class Program;
 }
+
+namespace Render
+{
 
 class FrameParams
 {
@@ -44,12 +47,12 @@ private:
 		glm::mat4 proj;
 	};
 
-	static constexpr const char* blockName = "FrameParams";
-
 	GL::UniformBinding bindingPoint;
 	GL::Buffer buffer;
 
 	Data data;
 };
 
-#endif //FRAME_PARAMS_H
+} //namespace Render
+
+#endif //RENDER_FRAME_PARAMS_H

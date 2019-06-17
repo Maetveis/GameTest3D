@@ -66,7 +66,7 @@ bool Game::Init()
 		return false;
 
 	SDL::WindowInfo info;
-	info.SetTitle("asd dev");
+	info.SetTitle("GameTest3D");
 	mainWindow = std::make_unique<SDL::GLWindow>(info);
 
 	if(!GL::InitGlew())

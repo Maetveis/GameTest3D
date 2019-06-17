@@ -7,6 +7,14 @@
 
 namespace GL {
 
+/*
+A Vertex Array describing the attriubtes of a vertex
+
+Can be attached to a vertex array binding point to asssiciate it with buffers
+to source the attributes from.
+Attaches to an Index Buffer explicitly via AttachIndexBuffer or implicitly to
+the currently bound IndexBuffer using the AttribPointer function
+*/
 class VertexArray
 {
 protected:
@@ -32,7 +40,7 @@ public:
 		glBindVertexArray(0);
 	}
 
-	inline void AttachIndex(const Buffer& indexBuffer)
+	inline void BindIndexBuffer(const Buffer& indexBuffer)
 	{
 		glVertexArrayElementBuffer(id, indexBuffer.GetId());
 	}
@@ -42,7 +50,13 @@ public:
 		glEnableVertexArrayAttrib(id, index);
 	}
 
-	inline void FormatAttrib(GLuint index, GLint size, GLenum type, bool normalized, GLuint relativeOffset)
+	inline void FormatAttrib(
+		GLuint index,
+		GLint size,
+		GLenum type,
+		bool normalized,
+		GLuint relativeOffset
+	)
 	{
 		glVertexArrayAttribFormat(id, index, size, type, normalized, relativeOffset);
 	}
@@ -52,7 +66,14 @@ public:
 		return id;
 	}
 
-	inline static void AttribPointer(GLuint index, GLint size, GLenum type, bool normalized ,GLuint stride, void* offset)
+	inline static void AttribPointer(
+		GLuint index,
+		GLint size,
+		GLenum type,
+		bool normalized,
+		GLuint stride,
+		void* offset
+	)
 	{
 		glVertexAttribPointer(index, size, type, normalized, stride, offset);
 	}

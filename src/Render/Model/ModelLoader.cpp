@@ -1,7 +1,12 @@
 #include "ModelLoader.hpp"
 
-#include "../Library/Logger/Logger.hpp"
-#include "Material/MaterialParams.h"
+#include "RigidModel.hpp"
+#include "Mesh.hpp"
+
+#include "../Material/MaterialParams.hpp"
+
+#include "../../DataStore/ManagedBuffer.hpp"
+#include "../../Library/Logger/Logger.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -10,6 +15,9 @@
 #include <glm/gtc/random.hpp>
 
 #include <limits>
+
+namespace Render
+{
 
 bool ModelLoader::ImportFile(const std::string& filename, RigidModel& newModel)
 {
@@ -52,7 +60,7 @@ void ModelLoader::HandleIndices(const aiMesh& mesh, RigidModel& model, GL::Range
 {
 	std::vector<T> vec = GetIndices<T>(mesh);
 	GL::Range indexRange = InsertIndices(vec.size() * sizeof(T), vec.data(), sizeof(T));
-	model.meshes.emplace_back(vertexRange, indexRange, vec.size(), GL::TypeEnum<T>::value);
+	model.meshes.emplace_back(vertexRange, indexRange, vertexRange.offset / sizeof(PosNormUVFormat), vec.size(), GL::TypeEnum<T>::value);
 }
 
 GL::Range ModelLoader::InsertIndices (GLuint size, const void* data, GLuint alignment)
@@ -60,9 +68,9 @@ GL::Range ModelLoader::InsertIndices (GLuint size, const void* data, GLuint alig
 	return indexBuffer.Push(size, data, alignment);
 }
 
-GL::Range ModelLoader::InsertVertices(const std::vector<BasicVertexFormat>& vertices)
+GL::Range ModelLoader::InsertVertices(const std::vector<PosNormUVFormat>& vertices)
 {
-	return vertexBuffer.Push(vertices, sizeof(BasicVertexFormat));
+	return vertexBuffer.Push(vertices, sizeof(PosNormUVFormat));
 }
 
 template <typename T>
@@ -80,9 +88,9 @@ std::vector<T> ModelLoader::GetIndices(const aiMesh& mesh)
 	return indices;
 }
 
-std::vector<BasicVertexFormat> ModelLoader::GetVertices(const aiMesh& mesh)
+std::vector<PosNormUVFormat> ModelLoader::GetVertices(const aiMesh& mesh)
 {
-	std::vector<BasicVertexFormat> vertices;
+	std::vector<PosNormUVFormat> vertices;
 	vertices.reserve(mesh.mNumVertices);
 
 	const glm::vec2 zero = glm::vec2(0,0);
@@ -96,3 +104,5 @@ std::vector<BasicVertexFormat> ModelLoader::GetVertices(const aiMesh& mesh)
 
 	return vertices;
 }
+
+} //namespace Render

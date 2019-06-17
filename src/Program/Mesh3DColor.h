@@ -5,7 +5,7 @@
 #include "../Model/FrameParams.h"
 #include "../Model/Material/MaterialParams.h"
 #include "../Model/LightParams.h"
-#include "../Model/Mesh/Mesh3D.hpp"
+#include "../Model/Mesh/Mesh.hpp"
 
 class Mesh3DColor
 {
@@ -65,7 +65,7 @@ public:
 		program.Unuse();
 	}
 
-	void Render(Mesh3D& mesh)
+	void Render(Mesh& mesh)
 	{
 		mesh.Draw();
 	};

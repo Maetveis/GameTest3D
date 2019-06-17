@@ -1,5 +1,5 @@
-#ifndef MATERIAL_PARAMS_H
-#define MATERIAL_PARAMS_H
+#ifndef RENDER_MATERIAL_PARAMS_H
+#define RENDER_MATERIAL_PARAMS_H
 
 #include "../../Library/GL/UniformBinding.hpp"
 #include "../../DataStore/ManagedBuffer.hpp"
@@ -10,6 +10,9 @@
 namespace GL {
 	class Program;
 }
+
+namespace Render
+{
 
 class MaterialParams
 {
@@ -33,4 +36,6 @@ private:
 	ManagedBuffer uniformBuffer;
 };
 
-#endif //MATERIAL_PARAMS_H
+} //namespace Render
+
+#endif //RENDER_MATERIAL_PARAMS_H

@@ -1,15 +1,17 @@
-#ifndef RIGID_MODEL_HPP
-#define RIGID_MODEL_HPP
+#ifndef RENDER_RIGID_MODEL_HPP
+#define RENDER_RIGID_MODEL_HPP
 
-#include "Mesh/Mesh3D.hpp"
+#include "Mesh.hpp"
 #include <vector>
+
+namespace Render {
 
 using MaterialId = unsigned int;
 
 class RigidModel
 {
 public:
-	std::vector<Mesh3D> meshes;
+	std::vector<Mesh> meshes;
 	std::vector<MaterialId> materials;
 
 	RigidModel() = default;
@@ -21,4 +23,7 @@ public:
 /*
 	void AddPart(MeshId mesh, MaterialId material);*/
 };
-#endif
+
+}
+
+#endif //RENDER_RIGID_MODEL_HPP

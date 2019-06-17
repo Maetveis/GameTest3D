@@ -22,16 +22,16 @@ endif
 
 SRCS := DataStore/GPUAllocator.cpp \
 	Game/main.cpp Game/Game.cpp Game/ScaledDeltaTimer.cpp \
-	Scene/InGameScene.cpp \
-	Model/Mesh/Mesh3D.cpp Model/FrameParams.cpp \
-	Model/LightParams.cpp Model/Material/MaterialParams.cpp Model/ModelLoader.cpp \
-	Manager/SceneManager.cpp \
+	Scene/InGameScene.cpp Scene/SceneManager.cpp \
 	Library/GL/UniformBinding.cpp Library/GL/Shader.cpp Library/GL/Init.cpp \
 	Library/GL/ShaderStorageBinding.cpp Library/GL/Program.cpp Library/GL/Texture.cpp \
 	Library/SDL/Init.cpp Library/SDL/Surface.cpp Library/SDL/Window/WindowInfo.cpp \
  	Library/SDL/Window/GLWindow.cpp \
 	Library/Logger/Logger.cpp \
-	Program/Mesh3DColor.cpp \
+	Render/Material/MaterialParams.cpp Render/Model/Mesh.cpp \
+	Render/Model/ModelLoader.cpp Render/Renderer/ObjectRenderer.cpp \
+	Render/Scene/FrameParams.cpp Render/Scene/LightParams.cpp \
+	Render/Scene/Scene.cpp
 
 OBJNAMES := $(SRCS:.cpp=.o)
 OBJS := $(addprefix $(OBJDIR)/,$(OBJNAMES))

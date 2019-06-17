@@ -1,7 +1,10 @@
-#include "MaterialParams.h"
+#include "MaterialParams.hpp"
 
 #include "../../Library/GL/Program.hpp"
 #include "../../Library/GL/Range.hpp"
+
+namespace Render
+{
 
 void MaterialParams::Bind(const GL::Program& program)
 {
@@ -21,3 +24,5 @@ void MaterialParams::UseMaterial(size_t id)
 {
 	uniformBinding.AttachBufferRange(uniformBuffer, materials[id].GetLocation());
 }
+
+} //namespace Render
