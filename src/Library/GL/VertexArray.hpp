@@ -8,7 +8,7 @@
 namespace GL {
 
 /*
-A Vertex Array describing the attriubtes of a vertex
+A Vertex Array describing the attriubtes of each vertex
 
 Can be attached to a vertex array binding point to asssiciate it with buffers
 to source the attributes from.
@@ -20,37 +20,37 @@ class VertexArray
 protected:
 	GLuint id;
 public:
-	inline VertexArray()
+	VertexArray()
 	{
 		glCreateVertexArrays(1, &id);
 	}
 
-	inline ~VertexArray()
+	~VertexArray()
 	{
 		glDeleteVertexArrays(1, &id);
 	}
 
-	inline void Bind() const
+	void Bind() const
 	{
 		glBindVertexArray(id);
 	}
 
-	inline void UnBind() const
+	void UnBind() const
 	{
 		glBindVertexArray(0);
 	}
 
-	inline void BindIndexBuffer(const Buffer& indexBuffer)
+	void BindIndexBuffer(const Buffer& indexBuffer)
 	{
 		glVertexArrayElementBuffer(id, indexBuffer.GetId());
 	}
 
-	inline void EnableAttrib(GLuint index)
+	void EnableAttrib(GLuint index)
 	{
 		glEnableVertexArrayAttrib(id, index);
 	}
 
-	inline void FormatAttrib(
+	void FormatAttrib(
 		GLuint index,
 		GLint size,
 		GLenum type,
@@ -61,12 +61,12 @@ public:
 		glVertexArrayAttribFormat(id, index, size, type, normalized, relativeOffset);
 	}
 
-	inline GLint GetId() const
+	GLint GetId() const
 	{
 		return id;
 	}
 
-	inline static void AttribPointer(
+	static void AttribPointer(
 		GLuint index,
 		GLint size,
 		GLenum type,

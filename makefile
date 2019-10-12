@@ -1,8 +1,8 @@
-CXX := g++
+CXX := clang++
 CXXFLAGS := -Wall -O0 -g -std=c++17 -MMD -MP
 SRCDIR := src
 OBJDIR := build/obj
-INCL := include
+INCL := src
 LIBDIR := lib
 LDFLAGS := -g
 LDLIBS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lassimp
@@ -10,28 +10,20 @@ LDLIBS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lassimp
 MKDIR := mkdir
 
 ifeq ($(OS),Windows_NT)
+	CXX := g++
 	OUT := bin/main.exe
 	LDLIBS += -lmingw32 -lopengl32 -lglew32
+	INCL += include
 	#LDFLAGS += -mwindows
 else
 	OUT := bin/main.run
-    INCL :=
     LDLIBS += -lGL -lGLEW
     MKDIR += -p
 endif
 
-SRCS := DataStore/GPUAllocator.cpp \
-	Game/main.cpp Game/Game.cpp Game/ScaledDeltaTimer.cpp \
-	Scene/InGameScene.cpp Scene/SceneManager.cpp \
-	Library/GL/UniformBinding.cpp Library/GL/Shader.cpp Library/GL/Init.cpp \
-	Library/GL/ShaderStorageBinding.cpp Library/GL/Program.cpp Library/GL/Texture.cpp \
-	Library/SDL/Init.cpp Library/SDL/Surface.cpp Library/SDL/Window/WindowInfo.cpp \
- 	Library/SDL/Window/GLWindow.cpp \
-	Library/Logger/Logger.cpp \
-	Render/Material/MaterialParams.cpp Render/Model/Mesh.cpp \
-	Render/Model/ModelLoader.cpp Render/Renderer/ObjectRenderer.cpp \
-	Render/Scene/FrameParams.cpp Render/Scene/LightParams.cpp \
-	Render/Scene/Scene.cpp
+INCL_CMDS := $(addprefix -I,$(INCL))
+
+-include src/sources.makefile
 
 OBJNAMES := $(SRCS:.cpp=.o)
 OBJS := $(addprefix $(OBJDIR)/,$(OBJNAMES))
@@ -42,7 +34,7 @@ all : $(OUT)
 .PHONY: clean all
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp | $(BUILD_DIRS)
-	$(CXX) $< -c $(CXXFLAGS) -o $@
+	$(CXX) $< -c $(CXXFLAGS) $(INCL_CMDS) -o $@
 
 $(OUT) : $(OBJS)
 	$(CXX) $^ $(LDFLAGS) $(LDLIBS) -o $(OUT)

@@ -3,8 +3,9 @@
 
 #include <GL/glew.h>
 
-namespace GL {
-	class Program;
+namespace GL
+{
+class Program;
 }
 
 namespace GL {

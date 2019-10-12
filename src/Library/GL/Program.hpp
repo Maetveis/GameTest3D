@@ -14,71 +14,135 @@ class Program
 {
 private:
 	GLuint programID;
+
+	GLint GetInterfaceValue(GLenum programInterface, GLenum pname) const
+	{
+		GLint result;
+		glGetProgramInterfaceiv(programID, programInterface, pname, &result);
+		return result;
+	}
+
+	std::string GetResourceName(GLenum programInterface, GLint index) const
+	{
+		constexpr size_t BufferSize = 100;
+		std::unique_ptr<char> buffer(new char[BufferSize]);
+		GLint length;
+
+		glGetProgramResourceName(programID, programInterface, index, BufferSize, &length, buffer.get());
+		return std::string(buffer.get());
+	}
 public:
-	Program()
-	{
-		programID = glCreateProgram();
-	}
-
-	inline void CreateName()
+	Program() :
+		programID(glCreateProgram())
 	{
 	}
 
-	inline explicit Program(GLuint p) :
+	explicit Program(GLuint p) :
 		programID(p)
 	{
 	}
 
-	inline ~Program()
+	Program(Program&& other):
+		programID(other.programID)
 	{
-		Destroy();
+		other.programID = 0;
 	}
 
-	inline GLuint Get() const
+	Program(const Program&) = delete;
+
+	~Program()
+	{
+		if(programID != 0)
+			glDeleteProgram(programID);
+	}
+
+	Program& operator=(Program&& other)
+	{
+		std::swap(programID, other.programID);
+
+		return *this;
+	}
+
+	GLuint Get() const
 	{
 		return programID;
 	}
 
-	inline GLuint operator*() const
+	GLuint GetId() const
 	{
 		return programID;
 	}
 
-	inline operator bool ()
+	GLuint operator*() const
+	{
+		return programID;
+	}
+
+	operator bool ()
 	{
 		GLint result;
 		glGetProgramiv(programID, GL_LINK_STATUS, &result);
 		return result == GL_TRUE;
 	}
 
-	inline bool operator ! ()
+	bool operator ! ()
 	{
 		GLint result;
 		glGetProgramiv(programID, GL_LINK_STATUS, &result);
 		return result != GL_TRUE;
 	}
 
-	inline GLuint GetUniformLocation(const char* name) const
+	GLuint GetUniformLocation(const char* name) const
 	{
 		return glGetUniformLocation(programID, name);
 	}
 
-	inline GLuint GetUniformBlockIndex(const char* name) const
+	GLuint GetUniformBlockIndex(const char* name) const
 	{
 		return glGetUniformBlockIndex(programID, name);
 	}
 
-	inline GLuint GetShaderStorageBlockIndex(const char* name) const
+	GLuint GetShaderStorageBlockIndex(const char* name) const
 	{
 		return glGetProgramResourceIndex(programID, GL_SHADER_STORAGE_BLOCK, name);
 	}
 
-	inline void AttachShader(const Shader& shader)
+	GLint GetUniformCount() const
+	{
+		return GetInterfaceValue(GL_UNIFORM, GL_ACTIVE_RESOURCES);
+	}
+
+	GLint GetUniformBlockCount() const
+	{
+		return GetInterfaceValue(GL_UNIFORM_BLOCK, GL_ACTIVE_RESOURCES);
+	}
+
+	GLint GetShaderStorageBlockCount() const
+	{
+		return GetInterfaceValue(GL_SHADER_STORAGE_BLOCK, GL_ACTIVE_RESOURCES);
+	}
+
+	std::string GetUniformName(GLint index)
+	{
+		return GetResourceName(GL_UNIFORM, index);
+	}
+
+	std::string GetUniformBlockName(GLint index) const
+	{
+		return GetResourceName(GL_UNIFORM_BLOCK, index);
+	}
+
+	std::string GetShaderStorageBlockName(GLint index) const
+	{
+		return GetResourceName(GL_SHADER_STORAGE_BLOCK, index);
+	}
+
+	void AttachShader(const Shader& shader)
 	{
 		glAttachShader(programID, shader.GetId());
 	}
 
-	inline bool Link()
+	bool Link()
 	{
 		GLint result = GL_FALSE;
 
@@ -88,27 +152,17 @@ public:
 		return result == GL_TRUE;
 	}
 
-	inline void Use() const
+	void Use() const
 	{
 		glUseProgram(programID);
 	}
 
-	inline void Unuse() const
-	{
-		glUseProgram(0);
-	}
-
-	inline void Destroy()
-	{
-		glDeleteProgram(programID);
-	}
-
-	inline std::string GetInfoLog()
+	std::string GetInfoLog()
 	{
 		GLint infoLogLength;
 		glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		std::unique_ptr<char> errorMessage(new char[infoLogLength]);
+		auto errorMessage = std::make_unique<char[]>(infoLogLength);
 		glGetProgramInfoLog(programID, infoLogLength, NULL, errorMessage.get());
 
 		return std::string(errorMessage.get());

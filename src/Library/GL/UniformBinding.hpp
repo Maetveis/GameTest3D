@@ -3,8 +3,8 @@
 
 #include "Range.hpp"
 
-#include "../StaticCounter.hpp"
-#include "../Logger/Logger.hpp"
+#include <Library/StaticCounter.hpp>
+#include <Library/Logger/Logger.hpp>
 
 #include <GL/glew.h>
 #include <vector>
@@ -31,9 +31,9 @@ public:
 
 	void AttachToBlock(const Program& program, const GLuint index) const;
 
-	void AttachBuffer(const Buffer& buffer);
+	void AttachBuffer(const Buffer& buffer) const;
 
-	void AttachBufferRange(const Buffer& buffer, Range range);
+	void AttachBufferRange(const Buffer& buffer, Range range) const;
 
 	GLuint GetBlockBinding() const
 	{

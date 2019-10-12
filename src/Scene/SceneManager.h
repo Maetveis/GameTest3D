@@ -1,10 +1,10 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
+#include <Game/GameComponent.h>
+
 #include <memory>
 #include <stack>
-
-#include "../Game/GameComponent.h"
 
 struct Scene;
 

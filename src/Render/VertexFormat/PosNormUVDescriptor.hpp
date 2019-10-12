@@ -1,10 +1,10 @@
 #ifndef RENDER_POSNORMUV_DESCRIPTOR_HPP
 #define RENDER_POSNORMUV_DESCRIPTOR_HPP
 
-#include "../../Library/GL/VertexDescriptor.hpp"
-#include "../../Library/GL/TypeEnum.hpp"
-
 #include "PosNormUVFormat.hpp"
+
+#include <Library/GL/VertexDescriptor.hpp>
+#include <Library/GL/TypeEnum.hpp>
 
 #include <cstddef>
 

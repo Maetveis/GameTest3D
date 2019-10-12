@@ -1,14 +1,15 @@
 #ifndef RENDER_SCENE_HPP
 #define RENDER_SCENE_HPP
 
-#include "FrameParams.hpp"
-#include "LightParams.hpp"
 #include "Object.hpp"
+#include "Light.hpp"
 
-#include "../Model/RigidModel.hpp"
-#include "../Material/MaterialParams.hpp"
+#include <Render/Model/RigidModel.hpp>
+#include <Render/Material/Material.hpp>
+#include <Render/Resource/ResourceManager.hpp>
 
-#include "../../DataStore/ManagedBuffer.hpp"
+
+#include <DataStore/ManagedBuffer.hpp>
 
 #include <glm/mat4x4.hpp>
 
@@ -23,8 +24,8 @@ namespace GL
 
 namespace Render
 {
-	class Light;
 	class PosNormUVDescriptor;
+	class ProgramInterface;
 }
 
 namespace Render
@@ -33,59 +34,50 @@ namespace Render
 class Scene
 {
 private:
-	LightParams lights;
-	FrameParams frameParams;
-	MaterialParams materials;
+	std::vector<Light> lights;
+
+	glm::mat4 view;
+	glm::mat4 proj;
 
 	std::vector<Object> objects;
-	std::map<std::string, std::unique_ptr<RigidModel> > models;
-
-	ManagedBuffer vertexBuffer;
-	ManagedBuffer indexBuffer;
 public:
 	Scene();
 
-	void AddLight(const Light& light)
+	void AddLight(Light light)
 	{
-		lights.AddLight(light);
+		lights.emplace_back(std::move(light));
 	}
 
-	void SetProj(const glm::mat4& proj)
+	void SetProj(const glm::mat4& _proj)
 	{
-		frameParams.SetProj(proj);
+		proj = _proj;
 	}
 
-	void SetView(const glm::mat4& view)
+	void SetView(const glm::mat4& _view)
 	{
-		frameParams.SetView(view);
+		view = _view;
 	}
 
-	void BindParams(const GL::Program& program)
-	{
-		lights.Bind(program);
-		frameParams.Bind(program);
-		materials.Bind(program);
-	}
-
-	void UseMaterial(size_t id)
-	{
-		materials.UseMaterial(id);
-	}
-
-
-	void BindIndexVertexBuffer(PosNormUVDescriptor& va) const;
-
-	void AddObject(const std::string& name, const glm::mat4& transform);
+	void AddObject(Object object);
 
 	const std::vector<Object>& GetObjects() const
 	{
 		return objects;
 	}
 
-	void Update()
+	const glm::mat4& GetView() const
 	{
-		 lights.Update();
-		 frameParams.Update();
+		return view;
+	}
+
+	const glm::mat4& GetProj() const
+	{
+		return proj;
+	}
+
+	const std::vector<Light>& GetLights() const
+	{
+		return lights;
 	}
 };
 

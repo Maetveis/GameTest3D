@@ -6,22 +6,42 @@
 
 namespace Render {
 
-using MaterialId = unsigned int;
-
 class RigidModel
 {
-public:
+private:
+	size_t bufferID;
 	std::vector<Mesh> meshes;
-	std::vector<MaterialId> materials;
+public:
+	RigidModel(size_t _bufferID, std::vector<Mesh> _meshes = std::vector<Mesh>()) :
+ 		bufferID(_bufferID),
+ 		meshes(_meshes)
+ 	{
+		
+ 	}
 
-	RigidModel() = default;
 	RigidModel(const RigidModel&) = delete;
+
 	RigidModel(RigidModel&&) = default;
 
 	RigidModel& operator=(const RigidModel&) = delete;
+
 	RigidModel& operator=(RigidModel&&) = default;
-/*
-	void AddPart(MeshId mesh, MaterialId material);*/
+
+	void AddMesh(Mesh mesh)
+	{
+		meshes.emplace_back(std::move(mesh));
+	}
+
+	const std::vector<Mesh>& GetMeshes() const
+	{
+		return meshes;
+	}
+
+	size_t GetBufferID() const
+	{
+		return bufferID;
+	}
+
 };
 
 }

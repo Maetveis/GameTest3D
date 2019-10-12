@@ -1,11 +1,15 @@
 #ifndef RENDER_OBJECT_RENDERER_HPP
 #define RENDER_OBJECT_RENDERER_HPP
 
-#include "../VertexFormat/PosNormUVDescriptor.hpp"
-#include "../Model/RigidModel.hpp"
+#include "RenderStore.hpp"
 
-#include "../../Library/GL/Program.hpp"
-#include "../../Library/GL/Buffer.hpp"
+#include <Render/VertexFormat/PosNormUVDescriptor.hpp>
+#include <Render/Resource/ResourceManager.hpp>
+#include <Render/Material/Material.hpp>
+#include <Render/Model/RigidModel.hpp>
+
+#include <Library/GL/Program.hpp>
+#include <Library/GL/Buffer.hpp>
 
 #include <vector>
 
@@ -21,13 +25,11 @@ class ObjectRenderer
 {
 private:
 	Scene& scene;
+	RenderStore& store;
 
-	GL::Program renderProgram;
 	PosNormUVDescriptor descriptor;
-
-	std::vector<RigidModel> models;
 public:
-	ObjectRenderer(Scene& _scene);
+	ObjectRenderer(Scene& _scene, RenderStore& _store);
 
 	void ResizeViewPort(int newWidth, int newHeight);
 	void Render();

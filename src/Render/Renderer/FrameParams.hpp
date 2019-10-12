@@ -1,8 +1,8 @@
 #ifndef RENDER_FRAME_PARAMS_H
 #define RENDER_FRAME_PARAMS_H
 
-#include "../../Library/GL/UniformBinding.hpp"
-#include "../../Library/GL/Buffer.hpp"
+#include <Library/GL/UniformBinding.hpp>
+#include <Library/GL/Buffer.hpp>
 
 #include <glm/glm.hpp>
 
@@ -17,29 +17,20 @@ namespace Render
 class FrameParams
 {
 public:
-	void SetView(const glm::mat4 v)
+	FrameParams()
 	{
-		data.view = v;
+		bindingPoint.AttachBuffer(buffer);
 	}
 
-	void SetProj(const glm::mat4 p)
+	void Upload(const glm::mat4& view, const glm::mat4 proj)
 	{
-		data.proj = p;
+		buffer.BufferData(Data{view, proj}, GL_STREAM_DRAW);
 	}
 
-	const glm::mat4& GetView() const
+	GL::UniformBinding& GetBinding()
 	{
-		return data.view;
+		return bindingPoint;
 	}
-
-	const glm::mat4& GetProj() const
-	{
-		return data.proj;
-	}
-
-	void Bind(const GL::Program& program);
-
-	void Update();
 private:
 	struct Data
 	{
@@ -49,8 +40,6 @@ private:
 
 	GL::UniformBinding bindingPoint;
 	GL::Buffer buffer;
-
-	Data data;
 };
 
 } //namespace Render

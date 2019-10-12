@@ -1,6 +1,6 @@
 #include "Init.hpp"
 
-#include "../Logger/Logger.hpp"
+#include <Library/Logger/Logger.hpp>
 
 #include <SDL2/SDL.h>
 

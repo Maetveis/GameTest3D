@@ -32,7 +32,7 @@ layout(std140) uniform MaterialParams
 vec3 shadeFrom(Light light)
 {
 	vec3 to_light = normalize(light.pos - out_pos);
-	float distance2 = dot(light.pos - out_pos, light.pos - out_pos);
+	float distance2 = length(light.pos - out_pos);
 	vec3 norm = normalize(out_norm);
 
 	vec3 diffuse = clamp(dot(to_light, norm), 0, 1) * light.color * Kd * light.strength / distance2;
@@ -45,7 +45,7 @@ vec3 shadeFrom(Light light)
 
 void main()
 {
-	vec3 color = Ka * vec3(0.4, 0.4, 0.4);//lights[0].color * 0.1;
+	vec3 color = Ka;
 
 	for(uint i = 0; i < lightCount; ++i)
 	{

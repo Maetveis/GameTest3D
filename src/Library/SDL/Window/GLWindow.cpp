@@ -1,7 +1,7 @@
 #include "GLWindow.hpp"
 #include "WindowInfo.h"
 
-#include "../Surface.hpp"
+#include <Library/SDL/Surface.hpp>
 
 #include <SDL2/SDL.h>
 

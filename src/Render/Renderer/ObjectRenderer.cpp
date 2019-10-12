@@ -1,32 +1,31 @@
 #include "ObjectRenderer.hpp"
 
-#include "../Scene/Scene.hpp"
+#include <Render/Scene/Scene.hpp>
+#include <Render/Scene/Object.hpp>
+#include <Render/ProgramInterface/ProgramInterface.hpp>
 
-#include "../../Library/Logger/Logger.hpp"
+#include <Library/GL/SetUniform.hpp>
+
+#include <Library/Logger/Logger.hpp>
 
 #include <GL/glew.h>
 
-namespace
-{
-	constexpr const char* VertFileName = "../shaders/blinPhongVert.glsl";
-	constexpr const char* FragFileName = "../shaders/blinPhongFrag.glsl";
-}
+#include <iostream>
 
 namespace Render
 {
 
-ObjectRenderer::ObjectRenderer(Scene& _scene):
-	scene(_scene)
+ObjectRenderer::ObjectRenderer(Scene& _scene, RenderStore& _store) :
+	scene(_scene),
+	store(_store)
 {
 	glClearColor(0.3, 0., 0., 1.);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 
-
-	renderProgram.VsFsProgram(VertFileName, FragFileName);
-	scene.BindParams(renderProgram);
-	scene.BindIndexVertexBuffer(descriptor);
+	descriptor.BindIndexBuffer(store.GetIndexBuffer());
+	descriptor.BindVertexBuffer(store.GetVertexBuffer());
 }
 
 void ObjectRenderer::ResizeViewPort(int newWidth, int newHeight)
@@ -40,17 +39,25 @@ void ObjectRenderer::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	descriptor.Bind();
-	renderProgram.Use();
+	store.GetIndexBuffer().Bind(GL_ELEMENT_ARRAY_BUFFER);
 
-	GLuint modelId = renderProgram.GetUniformLocation("model");
+	store.UpdateScene(scene);
 
 	for(const Object& object: scene.GetObjects())
 	{
-		for(size_t i = 0; i < object.model.meshes.size(); ++i)
+		const auto& model = store.GetModel(object.GetModelID());
+		for(const auto& mesh: model.GetMeshes())
 		{
-			glUniformMatrix4fv(modelId, 1, false, &(object.transform[0][0]));
-			scene.UseMaterial(object.model.materials[i]);
-			object.model.meshes[i].Draw();
+			auto& material = store.GetMaterial(mesh.GetMaterialID());
+			auto& program = store.GetProgram(material.GetProgramID());
+
+			material.Bind(program);
+
+			program->Use();
+
+			program.SetModel(object.GetTransform());
+
+			mesh.Draw();
 		}
 	}
 }

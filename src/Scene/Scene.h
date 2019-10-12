@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "../Event/EventListener.h"
+#include <Event/EventListener.h>
 
 struct Scene :
 	public EventListener

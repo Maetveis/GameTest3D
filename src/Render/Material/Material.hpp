@@ -1,23 +1,52 @@
-#ifndef MATERIAL_HPP
+#ifndef RENDER_MATERIAL_HPP
+#define RENDER_MATERIAL_HPP
 
-#include "../../Library/GL/Range.hpp"
+#include <Render/Material/Param/MaterialParam.hpp>
 
-#include <GL/glew.h>
+#include <vector>
+#include <memory>
+
+namespace Render
+{
 
 class Material
 {
 private:
-	GL::Range location;
+	size_t programID;
+	std::vector< std::unique_ptr<MaterialParam> > params;
 public:
-	Material(GL::Range _location) :
-		location(_location)
+	Material(size_t _programID) :
+		programID(_programID)
 	{
 	}
 
-	GL::Range GetLocation() const
+	Material(const Material&) = delete;
+
+	Material(Material&& temp) :
+		programID(temp.programID),
+		params(std::move(temp.params))
 	{
-		return location;
 	}
+
+	void AddParam(std::unique_ptr<MaterialParam> param)
+	{
+		params.emplace_back(std::move(param));
+	}
+
+	size_t GetProgramID() const
+	{
+		return programID;
+	}
+
+	void Bind(const ProgramInterface& programInterface) const
+	{
+		for(const auto& param : params)
+		{
+			param->Bind(programInterface);
+		}
+ 	}
 };
 
-#endif //MATERIAL_HPP
+} //namespace Render
+
+#endif //RENDER_MATERIAL_HPP

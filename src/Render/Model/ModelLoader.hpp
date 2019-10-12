@@ -1,9 +1,7 @@
 #ifndef RENDER_MODEL_LOADER_HPP
 #define RENDER_MODEL_LOADER_HPP
 
-#include "../VertexFormat/PosNormUVFormat.hpp"
-
-#include "../../Library/GL/TypeEnum.hpp"
+#include <Render/VertexFormat/PosNormUVFormat.hpp>
 
 #include <vector>
 #include <string>
@@ -11,19 +9,17 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <GL/glew.h>
+
 class aiMesh;
 class ManagedBuffer;
-
-namespace GL
-{
-	class Range;
-}
 
 namespace Render
 {
 	class RigidModel;
 	class Mesh;
 	class MaterialParams;
+	class RenderStore;
 }
 
 namespace Render
@@ -32,15 +28,15 @@ namespace Render
 class ModelLoader
 {
 private:
-	ManagedBuffer& vertexBuffer;
-	ManagedBuffer& indexBuffer;
-	MaterialParams& materialParams;
+	RenderStore& store;
 
 	template <typename T>
-	void HandleIndices(const aiMesh& mesh, RigidModel& model, GL::Range vertexRange);
+	void HandleIndices(const aiMesh& mesh, RigidModel& model, GLuint vertexOffset);
 
-	GL::Range InsertVertices(const std::vector<PosNormUVFormat>& vertices);
-	GL::Range InsertIndices (GLuint size, const void* data, GLuint alignment);
+	GLuint InsertVertices(const std::vector<PosNormUVFormat>& vertices);
+
+	template <typename T>
+	GLuint InsertIndices (const std::vector<T>& vector);
 
 	template <typename T>
 	std::vector<T> GetIndices(const aiMesh& mesh);
@@ -50,10 +46,8 @@ private:
 
 	std::vector<PosNormUVFormat> GetVertices(const aiMesh& mesh);
 public:
-	ModelLoader(ManagedBuffer& _vertexBuffer, ManagedBuffer& _indexBuffer, MaterialParams& _materialParams) :
-		vertexBuffer(_vertexBuffer),
-		indexBuffer(_indexBuffer),
-		materialParams(_materialParams)
+	ModelLoader(RenderStore& _store) :
+		store(_store)
 	{
 		srand(time(0));
 	}

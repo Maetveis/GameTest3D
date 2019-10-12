@@ -18,6 +18,8 @@ public:
 	{
 	}
 
+	Range(const Range&)  = default;
+
 	bool operator==(const Range& rhs)
 	{
 		return offset == rhs.offset && size == rhs.size;

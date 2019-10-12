@@ -3,7 +3,7 @@
 
 #include "VertexArray.hpp"
 
-#include "../StaticCounter.hpp"
+#include <Library/StaticCounter.hpp>
 
 #include <GL/glew.h>
 

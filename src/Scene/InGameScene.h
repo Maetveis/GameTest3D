@@ -3,8 +3,9 @@
 
 #include "Scene.h"
 
-#include "../Render/Renderer/ObjectRenderer.hpp"
-#include "../Render/Scene/Scene.hpp"
+#include <Render/Renderer/ObjectRenderer.hpp>
+#include <Render/Renderer/RenderStore.hpp>
+#include <Render/Scene/Scene.hpp>
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -16,7 +17,8 @@ class InGameScene :
 public:
 	InGameScene():
 		scene(),
-		renderer(scene)
+		store(10000000, 10000000),
+		renderer(scene, store)
 	{
 	}
 
@@ -44,6 +46,7 @@ private:
 	bool LoadShaders();
 
 	Render::Scene scene;
+	Render::RenderStore store;
 	Render::ObjectRenderer renderer;
 };
 

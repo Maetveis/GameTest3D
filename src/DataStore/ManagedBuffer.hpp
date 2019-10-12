@@ -2,8 +2,9 @@
 #define MANAGED_BUFFER_HPP
 
 #include "GPUAllocator.hpp"
-#include "../Library/GL/Buffer.hpp"
-#include "../Library/GL/Range.hpp"
+
+#include <Library/GL/Buffer.hpp>
+#include <Library/GL/Range.hpp>
 
 class ManagedBuffer
 {

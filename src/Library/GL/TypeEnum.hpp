@@ -41,6 +41,13 @@ struct TypeEnum<Type> \
 	GL_TYPE_ENUM_DEF(GLdouble, 	GL_DOUBLE)
 
 #undef GL_TYPE_ENUM_DEF
+
+	template<typename T>
+	GLenum GetTypeEnum(T)
+	{
+		return TypeEnum<T>::value;
+	}
+
 }
 
 #endif //TYPE_ENUM_HPP

@@ -6,9 +6,9 @@
 
 struct PosNormUVFormat
 {
-	glm::vec3 pos;
-	glm::vec3 norm;
-	glm::vec2 uv;
+	alignas(16) glm::vec3 pos;
+	alignas(4) glm::vec3 norm;
+	alignas(16) glm::vec2 uv;
 
 	PosNormUVFormat(const glm::vec3& p, const glm::vec3& n, const glm::vec2& UV = glm::vec2(0,0)) :
 		pos(p),
@@ -23,6 +23,8 @@ struct PosNormUVFormat
 		uv(UV)
 	{
 	}
+
+	PosNormUVFormat() = default;
 
 };
 

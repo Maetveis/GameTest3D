@@ -1,5 +1,5 @@
 #include "SceneManager.h"
-#include "../Scene/Scene.h"
+#include "Scene.h"
 
 void SceneManager::PushScene(std::unique_ptr<Scene> ptr)
 {

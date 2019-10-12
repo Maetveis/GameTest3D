@@ -1,10 +1,10 @@
 #version 400
 
-// VBO-ból érkezõ változók
+// VBO-bï¿½l ï¿½rkezï¿½ vï¿½ltozï¿½k
 layout(location = 0) in vec3 in_pos;
 layout(location = 1) in vec3 in_norm;
 
-// a pipeline-ban tovább adandó értékek
+// a pipeline-ban tovï¿½bb adandï¿½ ï¿½rtï¿½kek
 out VertexData
 {
 	vec3 out_norm;
@@ -23,9 +23,8 @@ void main()
 {
 	vec4 pos = view * model * vec4(in_pos, 1);
 	//No non-uniform scales because of this
-	vec4 norm = view * model * vec4(in_norm, 0);
+	out_norm = (view * model * vec4(in_norm, 0)).xyz;
 	gl_Position = proj * pos;
-	
+
 	out_pos = pos.xyz;
-	out_norm = norm.xyz;
 }

@@ -3,8 +3,8 @@
 
 #include <GL/glew.h>
 
-#include "../StaticCounter.hpp"
-#include "../Logger/Logger.hpp"
+#include <Library/StaticCounter.hpp>
+#include <Library/Logger/Logger.hpp>
 
 namespace GL
 {

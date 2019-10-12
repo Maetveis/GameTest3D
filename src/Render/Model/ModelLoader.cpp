@@ -2,17 +2,21 @@
 
 #include "RigidModel.hpp"
 #include "Mesh.hpp"
+#include "VertexBatch.hpp"
 
-#include "../Material/MaterialParams.hpp"
+#include <Render/Material/ColorFormat.hpp>
+#include <Render/Material/Material.hpp>
+#include <Render/Renderer/RenderStore.hpp>
 
-#include "../../DataStore/ManagedBuffer.hpp"
-#include "../../Library/Logger/Logger.hpp"
+#include <Render/VertexFormat/PosNormUVFormat.hpp>
+
+#include <Library/GL/TypeEnum.hpp>
+#include <Library/Logger/Logger.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <glm/gtc/random.hpp>
 
 #include <limits>
 
@@ -39,15 +43,16 @@ bool ModelLoader::ImportFile(const std::string& filename, RigidModel& newModel)
 
 	for(unsigned int i = 0; i < scene->mNumMeshes; ++i)
 	{
-		GL::Range vertexRange = InsertVertices(GetVertices(*scene->mMeshes[i]));
-		newModel.materials.emplace_back(materialParams.Push(ColorFormat(glm::sphericalRand<float>(1.) + glm::vec3(.4, .4, .4), glm::sphericalRand<float>(1.), glm::sphericalRand(1.),  30)));
+		GLuint vertexOffset = InsertVertices(GetVertices(*scene->mMeshes[i]));
+
+//		newModel.materials.emplace_back(materialParams.AddRandomMaterial());
 
 		if(scene->mMeshes[i]->mNumVertices < std::numeric_limits<GLubyte>::max())
-			HandleIndices<GLubyte>(*scene->mMeshes[i], newModel, vertexRange);
+			HandleIndices<GLubyte>(*scene->mMeshes[i], newModel, vertexOffset);
 		else if (scene->mMeshes[i]->mNumVertices < std::numeric_limits<GLushort>::max())
-			HandleIndices<GLushort>(*scene->mMeshes[i], newModel, vertexRange);
+			HandleIndices<GLushort>(*scene->mMeshes[i], newModel, vertexOffset);
 		else
-			HandleIndices<GLuint>(*scene->mMeshes[i], newModel, vertexRange);
+			HandleIndices<GLuint>(*scene->mMeshes[i], newModel, vertexOffset);
 	}
 
 	Logger::Debug() << "Successfully loaded " << filename << '\n';
@@ -56,21 +61,22 @@ bool ModelLoader::ImportFile(const std::string& filename, RigidModel& newModel)
 }
 
 template <typename T>
-void ModelLoader::HandleIndices(const aiMesh& mesh, RigidModel& model, GL::Range vertexRange)
+void ModelLoader::HandleIndices(const aiMesh& mesh, RigidModel& model, GLuint vertexOffset)
 {
 	std::vector<T> vec = GetIndices<T>(mesh);
-	GL::Range indexRange = InsertIndices(vec.size() * sizeof(T), vec.data(), sizeof(T));
-	model.meshes.emplace_back(vertexRange, indexRange, vertexRange.offset / sizeof(PosNormUVFormat), vec.size(), GL::TypeEnum<T>::value);
+	GLuint indexOffset = InsertIndices(vec);
+	model.AddMesh(Mesh(VertexBatch(vec.size(), indexOffset, GL::TypeEnum<T>::value, vertexOffset, GL_TRIANGLES), 0));
 }
 
-GL::Range ModelLoader::InsertIndices (GLuint size, const void* data, GLuint alignment)
+template <typename T>
+GLuint ModelLoader::InsertIndices (const std::vector<T>& vector)
 {
-	return indexBuffer.Push(size, data, alignment);
+	return store.PushIndex(vector);
 }
 
-GL::Range ModelLoader::InsertVertices(const std::vector<PosNormUVFormat>& vertices)
+GLuint ModelLoader::InsertVertices(const std::vector<PosNormUVFormat>& vertices)
 {
-	return vertexBuffer.Push(vertices, sizeof(PosNormUVFormat));
+	return store.PushVertex(vertices) / sizeof(vertices.front());
 }
 
 template <typename T>

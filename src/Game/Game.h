@@ -1,5 +1,6 @@
 #include "ScaledDeltaTimer.h"
-#include "../Scene/SceneManager.h"
+
+#include <Scene/SceneManager.h>
 
 namespace SDL
 {

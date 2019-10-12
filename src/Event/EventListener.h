@@ -1,7 +1,7 @@
 #ifndef Event_Listener_H
 #define Event_Listener_H
 
-#include "../Game/GameComponent.h"
+#include <Game/GameComponent.h>
 
 #include <SDL2/SDL.h>
 

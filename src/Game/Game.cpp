@@ -1,16 +1,16 @@
 #include "Game.h"
 
-#include "../Scene/InGameScene.h"
+#include <Scene/InGameScene.h>
 
-#include "../Library/Logger/Logger.hpp"
+#include <Library/Logger/Logger.hpp>
 
-#include "../Library/SDL/Init.hpp"
-#include "../Library/SDL/Window/WindowInfo.h"
-#include "../Library/SDL/Window/GLWindow.hpp"
+#include <Library/SDL/Init.hpp>
+#include <Library/SDL/Window/WindowInfo.h>
+#include <Library/SDL/Window/GLWindow.hpp>
 
-#include "../Library/StaticCounter.hpp"
+#include <Library/StaticCounter.hpp>
 
-#include "../Library/GL/Init.hpp"
+#include <Library/GL/Init.hpp>
 
 #include <SDL2/SDL.h>
 #include <iostream>

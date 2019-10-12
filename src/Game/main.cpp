@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL_main.h>
 
-#include "../Library/Logger/Logger.hpp"
+#include <Library/Logger/Logger.hpp>
 
 int main(int argc, char* args[])
 {

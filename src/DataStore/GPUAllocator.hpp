@@ -1,7 +1,7 @@
 #ifndef GPU_ALLOCATOR_HPP
 #define GPU_ALLOCATOR_HPP
 
-#include "../Library/GL/Range.hpp"
+#include <Library/GL/Range.hpp>
 
 #include <GL/glew.h>
 #include <set>

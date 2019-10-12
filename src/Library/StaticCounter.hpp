@@ -8,56 +8,64 @@ template<typename T, typename Label>
 class StaticCounter
 {
 private:
-	static T contStart; //The first available slot
-	static std::priority_queue< T, std::vector<T>, std::greater<T> > holes; //The holes before the continous part
-	T slot;
+		static T contStart; //The first available slot
+		static std::priority_queue< T, std::vector<T>, std::greater<T> > holes; //The holes before the continous part
+		T slot;
 public:
-StaticCounter() :
-	slot(Request())
-{
-}
-
-~StaticCounter()
-{
-	Relase(slot);
-}
-
-T Get() const
-{
-	return slot;
-}
-
-operator T() const
-{
-	return Get();
-}
-
-static T Request()
-{
-	if(holes.empty())
+	StaticCounter() :
+		slot(Request())
 	{
-		return contStart++;
-	} else {
-		T ret = holes.top();
-		holes.pop();
-		return ret;
-	}
-}
-
-static void Relase(T slot)
-{
-	holes.push(slot);
-	while(!holes.empty() && contStart - holes.top() <= 1)
-	{
-		holes.pop();
-		--contStart;
 	}
 
-	if(holes.empty())
+	~StaticCounter()
 	{
-		contStart = 0;
+		Relase(slot);
 	}
-}
+
+	StaticCounter(const StaticCounter&) = delete;
+
+	StaticCounter(StaticCounter&& temp) :
+		slot(temp.slot)
+	{
+		temp.slot = Request();
+	}
+
+	T Get() const
+	{
+		return slot;
+	}
+
+	operator T() const
+	{
+		return Get();
+	}
+
+	static T Request()
+	{
+		if(holes.empty())
+		{
+			return contStart++;
+		} else {
+			T ret = holes.top();
+			holes.pop();
+			return ret;
+		}
+	}
+
+	static void Relase(T slot)
+	{
+		holes.push(slot);
+		while(!holes.empty() && contStart - holes.top() <= 1)
+		{
+			holes.pop();
+			--contStart;
+		}
+
+		if(holes.empty())
+		{
+			contStart = 0;
+		}
+	}
 
 };
 
