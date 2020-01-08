@@ -31,7 +31,6 @@ private:
 	LinearBuffer materialBuffer;
 
 	FrameParams frameParams;
-	LightParams lightParams;
 public:
 	RenderStore(GLuint vertexSize, GLuint indexSize) :
 		vertexBuffer(vertexSize, GL_STATIC_DRAW),
@@ -98,7 +97,7 @@ public:
 
 	unsigned AddProgram(ProgramInterface interface)
 	{
-		programs.emplace_back(std::move(interface)).AttachFrameLight(frameParams.GetBinding(), lightParams.GetBinding());
+		programs.emplace_back(std::move(interface)).AttachFrameLight(frameParams.GetBinding());
 
 		return programs.size() - 1;
 	}
@@ -126,7 +125,6 @@ public:
 	void UpdateScene(Scene& scene)
 	{
 		frameParams.Upload(scene.GetView(), scene.GetProj());
-		lightParams.Upload(scene.GetLights(), scene.GetView());
 	}
 };
 

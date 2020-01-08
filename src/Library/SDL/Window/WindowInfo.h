@@ -1,42 +1,41 @@
 #ifndef WINDOW_INFO_H
 #define WINDOW_INFO_H
 
-#include <string>
 #include <cstdint>
+#include <string>
 
-namespace SDL
-{
 
-struct WindowInfo
-{
-	WindowInfo(const std::string& t, int X, int Y, int W, int H, std::uint32_t f) :
-		title(t),
-		x(X),
-		y(Y),
-		w(W),
-		h(H),
-		flags(f)
-	{
-	}
+namespace SDL {
 
-	WindowInfo();
+struct WindowInfo {
+    WindowInfo(const std::string& t, int X, int Y, int W, int H, std::uint32_t f)
+        : title(t)
+        , x(X)
+        , y(Y)
+        , w(W)
+        , h(H)
+        , flags(f)
+    {
+    }
 
-	void SetTitle(const std::string&);
-	void SetPos(int, int);
-	void SetSize(int, int);
-	void SetOpenGL(bool);
-	void SetVisible(bool);
-	void SetResizable(bool);
+    WindowInfo();
 
-	WindowInfo(const WindowInfo&) = default;
-	WindowInfo& operator=(const WindowInfo&) = default;
+    void SetTitle(const std::string&);
+    void SetPos(int, int);
+    void SetSize(int, int);
+    void SetOpenGL(bool);
+    void SetVisible(bool);
+    void SetResizable(bool);
 
-	WindowInfo(WindowInfo&&) = default;
-	WindowInfo& operator=(WindowInfo&&) = default;
+    WindowInfo(const WindowInfo&) = default;
+    WindowInfo& operator=(const WindowInfo&) = default;
 
-	std::string title;
-	int x, y, w, h;
-	std::uint32_t flags;
+    WindowInfo(WindowInfo&&) = default;
+    WindowInfo& operator=(WindowInfo&&) = default;
+
+    std::string title;
+    int x, y, w, h;
+    std::uint32_t flags;
 };
 
 } //namespace SDL

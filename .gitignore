@@ -1,3 +1,5 @@
 build/*
 bin/main.exe
 bin/main.run
+.*/
+.*

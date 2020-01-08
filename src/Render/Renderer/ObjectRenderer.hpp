@@ -1,38 +1,43 @@
 #ifndef RENDER_OBJECT_RENDERER_HPP
 #define RENDER_OBJECT_RENDERER_HPP
 
+#include "GBuffer.hpp"
 #include "RenderStore.hpp"
+#include "LightPass.hpp"
 
-#include <Render/VertexFormat/PosNormUVDescriptor.hpp>
-#include <Render/Resource/ResourceManager.hpp>
-#include <Render/Material/Material.hpp>
-#include <Render/Model/RigidModel.hpp>
+#include "Library/StaticCounter.hpp"
 
-#include <Library/GL/Program.hpp>
-#include <Library/GL/Buffer.hpp>
+#include "Render/Scene/Scene.hpp"
+#include "Render/VertexFormat/PosNormUVDescriptor.hpp"
+
+#include "Library/GL/Buffer.hpp"
+#include "Library/GL/Program.hpp"
 
 #include <vector>
 
-namespace Render
-{
-	class Scene;
+namespace Render {
+class Scene;
 }
 
-namespace Render
-{
+namespace Render {
 
-class ObjectRenderer
-{
-private:
-	Scene& scene;
-	RenderStore& store;
-
-	PosNormUVDescriptor descriptor;
+class ObjectRenderer {
 public:
-	ObjectRenderer(Scene& _scene, RenderStore& _store);
+    ObjectRenderer(Scene& _scene, RenderStore& _store);
 
-	void ResizeViewPort(int newWidth, int newHeight);
-	void Render();
+    void ResizeViewPort(int newWidth, int newHeight);
+    void Render();
+
+private:
+    Scene& scene;
+    RenderStore& store;
+    Render::GBuffer gBuffer;
+    LightPass lightPass;
+
+    PosNormUVDescriptor descriptor;
+
+    unsigned width = 1000;
+    unsigned height = 1000;
 };
 
 } //namespace Render

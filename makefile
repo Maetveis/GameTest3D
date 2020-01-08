@@ -23,7 +23,7 @@ endif
 
 INCL_CMDS := $(addprefix -I,$(INCL))
 
--include src/sources.makefile
+-include src/sources.mk
 
 OBJNAMES := $(SRCS:.cpp=.o)
 OBJS := $(addprefix $(OBJDIR)/,$(OBJNAMES))

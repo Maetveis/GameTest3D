@@ -14,9 +14,9 @@ public:
 	{
 	}
 
-	void SetStorage(GLuint levels, GLenum colorFormat, GLint width, GLint height)
+	void SetStorage(GLuint levels, GLenum internalFormat, GLint width, GLint height)
 	{
-		glTextureStorage2D(textureID, levels, colorFormat, width, height);
+		glTextureStorage2D(textureID, levels, internalFormat, width, height);
 	}
 
 	void SubImageData(

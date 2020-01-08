@@ -10,6 +10,7 @@
 
 #include <GL/glew.h>
 
+#include <iostream>
 #include <vector>
 #include <variant>
 #include <cstdint>
@@ -99,10 +100,11 @@ class ProtoModel
 {
 public:
 	std::vector<ProtoMesh> meshes;
-	unsigned i = 0;
 	ProtoModel() = default;
 
-	ProtoModel(ProtoModel&&) = default;
+	ProtoModel(const ProtoModel&){std::cout << "copy\n";};
+
+	ProtoModel(ProtoModel&&){std::cout << "move\n";};
 
 	friend IO::BinaryFileReader& operator>>(IO::BinaryFileReader& lhs, ProtoModel& rhs);
 	friend IO::BinaryFileWriter& operator<<(IO::BinaryFileWriter& lhs, const ProtoModel& rhs);

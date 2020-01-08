@@ -52,10 +52,9 @@ public:
 		return bindings[index];
 	}
 
-	void AttachFrameLight(GL::UniformBinding& frameBinding, GL::UniformBinding& lightBinding)
+	void AttachFrameLight(GL::UniformBinding& frameBinding)
 	{
 		frameBinding.AttachToBlock(program, frameIndex);
-		lightBinding.AttachToBlock(program, lightIndex);
 	}
 
 	void SetModel(const glm::mat4& model)

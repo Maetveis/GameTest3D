@@ -20,5 +20,7 @@ SRCS := \
 	Render/Material/Param/BlockRangeParam.cpp \
 	Render/Model/ModelLoader.cpp \
 	Render/Renderer/ObjectRenderer.cpp \
+	Render/Renderer/GBuffer.cpp \
+	Render/Renderer/LightPass.cpp \
 	Render/Scene/Scene.cpp \
-	Render/ProgramInterface/ProgramInterface.cpp
+	Render/ProgramInterface/ProgramInterface.cpp \
