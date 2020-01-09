@@ -22,7 +22,6 @@ public:
 
 private:
     GL::Program blitProgram;
-    LightParams lightParams;
 
     StaticCounter<GLint, GL::Texture> positionUnit;
     StaticCounter<GLint, GL::Texture> normalUnit;
@@ -33,6 +32,10 @@ private:
     GLuint normalLocation;
     GLuint albedoLocation;
     GLuint depthLocation;
+
+    GLuint lightPosLocation;
+    GLuint lightColorLocation;
+    GLuint lightStrengthLocation;
 };
 
 } //namespace Render

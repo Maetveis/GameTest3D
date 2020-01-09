@@ -79,7 +79,10 @@ bool InGameScene::LoadShaders()
     scene.SetProj(glm::perspective(45.0f, 1000 / 1000.0f, 0.01f, 500.0f));
     scene.SetView(glm::lookAt(glm::vec3(0.f, 1.f, 6.f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
 
-    scene.AddLight(Render::Light(glm::vec3(30., 30.f, 100.f), glm::vec3(.7, .7, .7), 100));
+    scene.AddLight(Render::Light(glm::vec3(0.f, 0.f, -20.f), glm::vec3(.8f, 0.f, 0.f), 10.f));
+    scene.AddLight(Render::Light(glm::vec3(30.f, 0.f, 0.f), glm::vec3(0.f, .8f, 0.f), 10.f));
+    scene.AddLight(Render::Light(glm::vec3(-10.f, 10.f, 10.f), glm::vec3(0.f, 0.f, .8f), 5.f));
+    scene.AddLight(Render::Light(glm::vec3(0.f, -20.f, 20.f), glm::vec3(.8f, 0.8f, .8f), 20.f));
 
     return true;
 }
@@ -90,7 +93,7 @@ void InGameScene::Update(double deltaTime)
 {
     Time += deltaTime;
 
-    scene.SetView(glm::lookAt(glm::vec3(6.f * glm::sin(Time), 1.f, 6.f * glm::cos(Time)), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+    scene.SetView(glm::lookAt(glm::vec3(8.f * glm::sin(Time), 4.f, 8.f * glm::cos(Time)), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
 }
 
 void InGameScene::End()

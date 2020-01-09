@@ -12,7 +12,10 @@ LightPass::LightPass()
     albedoLocation = blitProgram.GetUniformLocation("albedoTexture");
     depthLocation = blitProgram.GetUniformLocation("depthTexture");
 
-    lightParams.GetBinding().AttachToBlock(blitProgram, blitProgram.GetUniformBlockIndex("LightParams"));
+    lightPosLocation = blitProgram.GetUniformLocation("lightPos");
+    lightColorLocation = blitProgram.GetUniformLocation("lightColor");
+    lightStrengthLocation = blitProgram.GetUniformLocation("lightStrength");
+
 }
 
 void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
@@ -21,12 +24,15 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glDisable(GL_DEPTH_TEST);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
     gBuffer.GetPositionTexture().Bind(positionUnit);
     gBuffer.GetNormalTexture().Bind(normalUnit);
     gBuffer.GetAlbedoTexture().Bind(albedoUnit);
     gBuffer.GetDepthTexture().Bind(depthUnit);
-
-    lightParams.Upload(scene.GetLights(), scene.GetView());
 
     blitProgram.Use();
 
@@ -35,7 +41,13 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
     GL::SetUniformActive(albedoLocation, albedoUnit);
     GL::SetUniformActive(depthLocation, depthUnit);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    for (const auto& light : scene.GetLights()) {
+        GL::SetUniformActive(lightPosLocation, glm::vec3(scene.GetView() * glm::vec4(light.pos, 1)));
+        GL::SetUniformActive(lightColorLocation, light.color);
+        GL::SetUniformActive(lightStrengthLocation, light.strength);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
 }
 
 } //namespace Render
