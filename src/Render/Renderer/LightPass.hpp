@@ -21,7 +21,7 @@ public:
     void Execute(const GBuffer& gBuffer, Scene& scene);
 
 private:
-    GL::Program blitProgram;
+	GL::Program spheresProgram;
 
     StaticCounter<GLint, GL::Texture> positionUnit;
     StaticCounter<GLint, GL::Texture> normalUnit;
@@ -32,10 +32,6 @@ private:
     GLuint normalLocation;
     GLuint albedoLocation;
     GLuint depthLocation;
-
-    GLuint lightPosLocation;
-    GLuint lightColorLocation;
-    GLuint lightStrengthLocation;
 };
 
 } //namespace Render

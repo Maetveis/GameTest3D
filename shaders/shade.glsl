@@ -1,36 +1,23 @@
 #version 450
 
-in VertexData
-{
-	vec2 uv;
-};
-
-out vec3 fs_color;
-
-struct Light
+in Light
 {
 	vec3 pos;
-	vec3 color;
 	float strength;
-};
+	vec3 color;
+} light;
 
-layout(std140) uniform LightParams
-{
-	Light lights[10];
-	uint lightCount;
-};
-
-uniform vec3  lightPos;
-uniform vec3  lightColor;
-uniform float lightStrength;
+out vec3 fs_color;
 
 uniform sampler2D positionTexture;
 uniform sampler2D normalTexture;
 uniform sampler2D albedoTexture;
 uniform sampler2D depthTexture;
 
-vec3 shadeFrom(Light light)
+vec3 shade()
 {
+	vec2 uv = gl_FragCoord.xy / 1000;
+
     vec3 pos = texture(positionTexture, uv).rgb;
     vec3 norm = texture(normalTexture, uv).rgb;
     vec3 albedo = texture(albedoTexture, uv).rgb;
@@ -48,5 +35,5 @@ vec3 shadeFrom(Light light)
 
 void main()
 {
-    fs_color = shadeFrom(Light(lightPos, lightColor, lightStrength));
+    fs_color = shade();
 }

@@ -38,8 +38,6 @@ private:
 
     unsigned width = 1000;
     unsigned height = 1000;
-
-    GL::Program spheresProgram;
 };
 
 } //namespace Render

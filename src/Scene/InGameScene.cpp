@@ -67,7 +67,7 @@ bool InGameScene::LoadData()
 
     auto modelID = store.UploadModel(std::move(protoModel));
 
-    reader >> protoModel;
+    //reader >> protoModel;
 
     scene.AddObject(Render::Object(modelID, glm::rotate(0.f, glm::vec3(1.f, 0.f, 0.f))));
 
