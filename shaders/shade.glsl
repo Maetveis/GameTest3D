@@ -28,7 +28,7 @@ vec3 shade()
 	vec3 diffuse = clamp(dot(to_light, norm), 0, 1) * light.color * albedo * light.strength / (1  + distance2);
 
 	vec3 to_eye = -normalize(pos);
-	vec3 specular = pow(clamp(dot(reflect(-to_light, norm), to_eye), 0, 1), 40) * 0.8 * light.color * light.strength / (1 + distance2);
+	vec3 specular = pow(clamp(dot(reflect(-to_light, norm), to_eye), 0, 1), 400) * 0.8 * light.color * light.strength / (1 + distance2);
 
 	return diffuse + specular;
 }
