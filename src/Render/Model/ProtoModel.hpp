@@ -102,9 +102,9 @@ public:
 	std::vector<ProtoMesh> meshes;
 	ProtoModel() = default;
 
-	ProtoModel(const ProtoModel&){std::cout << "copy\n";};
+	ProtoModel(const ProtoModel&) = default;
 
-	ProtoModel(ProtoModel&&){std::cout << "move\n";};
+	ProtoModel(ProtoModel&&) = default;
 
 	friend IO::BinaryFileReader& operator>>(IO::BinaryFileReader& lhs, ProtoModel& rhs);
 	friend IO::BinaryFileWriter& operator<<(IO::BinaryFileWriter& lhs, const ProtoModel& rhs);

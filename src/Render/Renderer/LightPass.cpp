@@ -63,10 +63,8 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
     GL::SetUniformActive(albedoLocation, albedoUnit);
     GL::SetUniformActive(depthLocation, depthUnit);
 
-
-	spheresProgram.Use();
     glPatchParameteri(GL_PATCH_VERTICES, 1);
-    glDrawArrays(GL_PATCHES, 0, 1000);
+    glDrawArrays(GL_PATCHES, 0, 100);
 	
     /*for (const auto& light : scene.GetLights()) {
         GL::SetUniformActive(lightPosLocation, glm::vec3(scene.GetView() * glm::vec4(light.pos, 1)));

@@ -62,12 +62,10 @@ bool InGameScene::LoadData()
     store.AddMaterial(std::move(material0));
 
     IO::BinaryFileReader reader("../assets/alfa.bin");
-    Render::ProtoModel protoModel;
+    Render::ProtoModel protoModel;// = Render::AssimpImportFile("../assets/cube.obj");
     reader >> protoModel;
 
     auto modelID = store.UploadModel(std::move(protoModel));
-
-    //reader >> protoModel;
 
     scene.AddObject(Render::Object(modelID, glm::rotate(0.f, glm::vec3(1.f, 0.f, 0.f))));
 
@@ -93,7 +91,7 @@ void InGameScene::Update(double deltaTime)
 {
     Time += deltaTime;
 
-    scene.SetView(glm::lookAt(glm::vec3(8.f * glm::sin(Time), 4.f, 8.f * glm::cos(Time)), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+    scene.SetView(glm::lookAt(glm::vec3(10.f * glm::sin(Time), 4.f, 10.f * glm::cos(Time)), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
 }
 
 void InGameScene::End()
