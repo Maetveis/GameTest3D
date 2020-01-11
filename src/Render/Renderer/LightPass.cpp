@@ -9,7 +9,7 @@ LightPass::LightPass()
     if (!vert.FromFile("../shaders/vert-spheres.glsl")) {
         Logger::Error {} << "vert-spheres.glsl Shader compilation failed: " << vert.GetInfoLog() << '\n';
     }
-	
+
 	GL::Shader tcs(GL_TESS_CONTROL_SHADER);
     if (!tcs.FromFile("../shaders/tcs-spheres.glsl")) {
         Logger::Error {} << "tcs-spheres.glsl Shader compilation failed: " << tcs.GetInfoLog() << '\n';
@@ -31,7 +31,7 @@ LightPass::LightPass()
     spheresProgram.AttachShader(vert);
     spheresProgram.AttachShader(frag);
     if (!spheresProgram.Link()) {
-        Logger::Error{} << "Failed to link spheres program: " << spheresProgram.GetInfoLog() << '\n';    
+        Logger::Error{} << "Failed to link spheres program: " << spheresProgram.GetInfoLog() << '\n';
     }
 
     positionLocation = spheresProgram.GetUniformLocation("positionTexture");
@@ -63,9 +63,9 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
     GL::SetUniformActive(albedoLocation, albedoUnit);
     GL::SetUniformActive(depthLocation, depthUnit);
 
-    glPatchParameteri(GL_PATCH_VERTICES, 1);
-    glDrawArrays(GL_PATCHES, 0, 100);
-	
+    glPatchParameteri(GL_PATCH_VERTICES, 25);
+    glDrawArrays(GL_PATCHES, 0, 1);
+
     /*for (const auto& light : scene.GetLights()) {
         GL::SetUniformActive(lightPosLocation, glm::vec3(scene.GetView() * glm::vec4(light.pos, 1)));
         GL::SetUniformActive(lightColorLocation, light.color);

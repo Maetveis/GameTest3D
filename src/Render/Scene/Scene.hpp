@@ -3,6 +3,7 @@
 
 #include "Object.hpp"
 #include "Light.hpp"
+#include "Camera.hpp"
 
 #include <Render/Model/RigidModel.hpp>
 #include <Render/Material/Material.hpp>
@@ -36,7 +37,8 @@ class Scene
 private:
 	std::vector<Light> lights;
 
-	glm::mat4 view;
+	Camera camera;
+
 	glm::mat4 proj;
 
 	std::vector<Object> objects;
@@ -53,11 +55,6 @@ public:
 		proj = _proj;
 	}
 
-	void SetView(const glm::mat4& _view)
-	{
-		view = _view;
-	}
-
 	void AddObject(Object object);
 
 	const std::vector<Object>& GetObjects() const
@@ -67,7 +64,12 @@ public:
 
 	const glm::mat4& GetView() const
 	{
-		return view;
+		return camera.GetView();
+	}
+
+	Camera& GetCamera()
+	{
+		return camera;
 	}
 
 	const glm::mat4& GetProj() const

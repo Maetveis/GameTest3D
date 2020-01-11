@@ -17,8 +17,8 @@ void main()
 	float y = x / wraps;
 	
 	vec2 uv = vec2(2 * Pi * x, Pi * y - Pi / 2);
-    sphere.pos = 5.0 * vec3( cos(uv.y)*cos(uv.x), sin(uv.y), cos(uv.y)*sin(uv.x) );
-    sphere.radius = 5;
+    sphere.pos = 4.0 * vec3( cos(uv.y)*cos(uv.x), sin(uv.y), cos(uv.y)*sin(uv.x) );
+    sphere.radius = 5.0;
 	
 	//sphere.pos = vec3(0, 0, 6);
 	//sphere.radius = 9;

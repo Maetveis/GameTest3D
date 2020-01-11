@@ -20,22 +20,25 @@ public:
     {
     }
 
-    virtual bool Begin();
+    virtual bool Begin() override;
 
-    virtual void End();
+    virtual void End() override;
 
-    virtual void Pause();
+    virtual void Pause() override;
 
-    virtual void PrepareRender();
-    virtual void Render();
+    virtual void PrepareRender() override;
+    virtual void Render() override;
 
-    virtual void Update(double);
+    virtual void Update(double) override;
 
-    virtual void OnKeyboard(SDL_KeyboardEvent& event);
+    virtual void OnKeyboard(SDL_KeyboardEvent& event) override;
 
-    virtual void OnWindow(SDL_WindowEvent& event);
+	virtual void OnMouseMotion(SDL_MouseMotionEvent&) override;
+	virtual void OnMouseButton(SDL_MouseButtonEvent&) override;
 
-    virtual void OnQuit(SDL_QuitEvent& event);
+    virtual void OnWindow(SDL_WindowEvent& event) override;
+
+    virtual void OnQuit(SDL_QuitEvent& event) override;
 
     void Quit();
 
@@ -47,6 +50,7 @@ private:
     Render::Scene scene;
     Render::RenderStore store;
     Render::ObjectRenderer renderer;
+	Render::CameraControls cameraControls;
 };
 
 #endif //IN_GAME_SCENE_H

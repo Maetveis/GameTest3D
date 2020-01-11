@@ -23,4 +23,5 @@ SRCS := \
 	Render/Renderer/GBuffer.cpp \
 	Render/Renderer/LightPass.cpp \
 	Render/Scene/Scene.cpp \
+	Render/Scene/Camera.cpp \
 	Render/ProgramInterface/ProgramInterface.cpp \
