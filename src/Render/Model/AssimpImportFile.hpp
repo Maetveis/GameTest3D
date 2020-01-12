@@ -58,9 +58,7 @@ ProtoModel AssimpImportFile(const std::string& filename)
 	const aiScene* scene = importer.ReadFile(
 		filename.c_str(),
 			aiProcess_Triangulate |
-			aiProcess_FlipUVs |
-			aiProcess_GenNormals |
-			aiProcess_JoinIdenticalVertices
+			aiProcess_FlipUVs
 	);
 
 	if(!scene)

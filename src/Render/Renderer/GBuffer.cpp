@@ -6,7 +6,7 @@ namespace Render {
 
 GBuffer::GBuffer(unsigned width, unsigned heigth)
 {
-    position.SetStorage(1, GL_RGB32F, width, heigth);
+    position.SetStorage(1, GL_RGBA32F, width, heigth);
     normal.SetStorage(1, GL_RGB16_SNORM, width, heigth);
     albedo.SetStorage(1, GL_RGB8, width, heigth);
     depth.SetStorage(1, GL_DEPTH_COMPONENT24, width, heigth);

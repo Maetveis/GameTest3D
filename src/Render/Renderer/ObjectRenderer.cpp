@@ -20,11 +20,14 @@ ObjectRenderer::ObjectRenderer(Scene& _scene, RenderStore& _store)
     : scene(_scene)
     , store(_store)
     , gBuffer(1000, 1000)
+	, ssaoPass(1000, 1000, 64)
 {
     glClearColor(0., 0., 0., 1.);
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+	
+	glEnable(GL_FRAMEBUFFER_SRGB); 
 
     descriptor.BindIndexBuffer(store.GetIndexBuffer());
     descriptor.BindVertexBuffer(store.GetVertexBuffer());
@@ -43,6 +46,8 @@ void ObjectRenderer::Render()
 
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
+	
+	glCullFace(GL_BACK);
 
     descriptor.Bind();
     store.GetIndexBuffer().Bind(GL_ELEMENT_ARRAY_BUFFER);
@@ -72,6 +77,8 @@ void ObjectRenderer::Render()
     }
 
     glViewport(0, 0, width, height);
+	
+	ssaoPass.Execute(gBuffer, scene);
 
     lightPass.Execute(gBuffer, scene);
 }

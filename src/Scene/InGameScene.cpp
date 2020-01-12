@@ -62,10 +62,10 @@ bool InGameScene::LoadData()
     store.AddMaterial(std::move(material0));
 
     IO::BinaryFileReader reader("../assets/alfa.bin");
-    Render::ProtoModel protoModel;// = Render::AssimpImportFile("../assets/cube.obj");
-    reader >> protoModel;
+    Render::ProtoModel protoModel = Render::AssimpImportFile("../assets/t-34.obj");
+    //reader >> protoModel;
 
-    auto modelID = store.UploadModel(std::move(protoModel));
+    auto modelID = store.UploadModel(protoModel);
 
     scene.AddObject(Render::Object(modelID, glm::rotate(0.f, glm::vec3(1.f, 0.f, 0.f))));
 

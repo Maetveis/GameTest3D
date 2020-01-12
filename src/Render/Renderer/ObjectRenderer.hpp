@@ -4,6 +4,7 @@
 #include "GBuffer.hpp"
 #include "RenderStore.hpp"
 #include "LightPass.hpp"
+#include "SSAOPass.hpp"
 
 #include "Library/StaticCounter.hpp"
 
@@ -32,6 +33,7 @@ private:
     Scene& scene;
     RenderStore& store;
     Render::GBuffer gBuffer;
+	SSAOPass ssaoPass;
     LightPass lightPass;
 
     PosNormUVDescriptor descriptor;

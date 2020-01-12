@@ -19,9 +19,9 @@ smooth out vec3 centerPos;
 
 out Light
 {
-	flat vec3 pos;
-	flat float strength;
-	flat vec3 color;
+	vec3 pos;
+	float strength;
+	vec3 color;
 } light;
 
 const float Pi = 3.141592654;
@@ -31,7 +31,7 @@ void main()
     vec2 uv = vec2(-2.0 * Pi * gl_TessCoord.x, gl_TessCoord.y * Pi - Pi / 2.0);
 	
 	light.color = normalize(vec3(1, 1, 1));
-	light.strength = 0.03 * (1 + sphere.radius * sphere.radius);
+	light.strength = 0.01 * (1 + sphere.radius * sphere.radius);
     light.pos = (view * vec4(sphere.pos, 1)).xyz;
 	
     gl_Position = 

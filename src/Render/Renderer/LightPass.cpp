@@ -1,5 +1,11 @@
 #include "LightPass.hpp"
+
+#include "Gbuffer.hpp"
+#include "Render/Scene/Scene.hpp"
+
 #include "Library/GL/SetUniform.hpp"
+
+#include "Library/Logger/Logger.hpp"
 
 namespace Render {
 
@@ -38,17 +44,56 @@ LightPass::LightPass()
     normalLocation = spheresProgram.GetUniformLocation("normalTexture");
     albedoLocation = spheresProgram.GetUniformLocation("albedoTexture");
     depthLocation = spheresProgram.GetUniformLocation("depthTexture");
+	
+	ambientProgram.VsFsProgram("../shaders/screenVert.glsl", "../shaders/ambientFrag.glsl");
+	
+	colorTexture.SetStorage(1, GL_R11F_G11F_B10F, 1000, 1000);
+	frameBuffer.AttachTextureLevel(GL_COLOR_ATTACHMENT0, colorTexture, 0);
+	frameBuffer.SetDrawBuffers({ GL_COLOR_ATTACHMENT0 });
+	
+	GLenum status = frameBuffer.CheckComplete(GL_DRAW_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        Logger::Error {} << "Unable to create LightBuffer\n";
+        Logger::Error {} << "FrameBuffer is not complete for drawing\n";
+
+        switch (status) {
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+            Logger::Info {} << "Incomplete Attachment\n";
+            break;
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+            Logger::Info {} << "No attachments\n";
+            break;
+        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+            Logger::Info {} << "Inomplete Draw Buffer\n";
+            break;
+        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+            Logger::Info {} << "Incomplete Read Buffer\n";
+            break;
+        case GL_FRAMEBUFFER_UNSUPPORTED:
+            Logger::Info {} << "Unsuported Image formats\n";
+            break;
+        default:
+            Logger::Info {} << "Other Incomplete status: " << status << '\n';
+            break;
+        }
+    } else {
+        Logger::Info {} << "LightBuffer Created Sucessfully\n";
+    }
+	
+	blitProgram.VsFsProgram("../shaders/screenVert.glsl", "../shaders/blit.glsl");
+	colorLocation = blitProgram.GetUniformLocation("colorTexture");
 }
 
 void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
 {
-    GL::FrameBuffer::BindDefault(GL_FRAMEBUFFER);
+    frameBuffer.Bind(GL_DRAW_FRAMEBUFFER);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glDisable(GL_DEPTH_TEST);
 
     glEnable(GL_BLEND);
+	glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_ONE, GL_ONE);
 
     gBuffer.GetPositionTexture().Bind(positionUnit);
@@ -57,6 +102,7 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
     gBuffer.GetDepthTexture().Bind(depthUnit);
 
 	spheresProgram.Use();
+	glCullFace(GL_FRONT);
 
     GL::SetUniformActive(positionLocation, positionUnit);
     GL::SetUniformActive(normalLocation, normalUnit);
@@ -65,6 +111,24 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
 
     glPatchParameteri(GL_PATCH_VERTICES, 1);
     glDrawArrays(GL_PATCHES, 0, 100);
+	
+	ambientProgram.Use();
+	
+	glCullFace(GL_BACK);
+	
+	GL::SetUniformActive(0, positionUnit);
+	
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	GL::FrameBuffer::BindDefault(GL_DRAW_FRAMEBUFFER);
+	
+	colorTexture.Bind(colorUnit);
+	
+	blitProgram.Use();
+	
+	GL::SetUniformActive(colorLocation, colorUnit);
+	
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
     /*for (const auto& light : scene.GetLights()) {
         GL::SetUniformActive(lightPosLocation, glm::vec3(scene.GetView() * glm::vec4(light.pos, 1)));
