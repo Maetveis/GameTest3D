@@ -18,8 +18,8 @@ namespace Render {
 
 class LightPass {
 public:
-    LightPass();
-    void Execute(const GBuffer& gBuffer, Scene& scene);
+    LightPass(GBuffer& gBuffer);
+    void Execute(const GBuffer& gBuffer, Scene& scene, const GL::Texture2D& ambientTexture);
 
 private:
 	GL::FrameBuffer frameBuffer;
@@ -30,10 +30,14 @@ private:
 	GL::Program ambientProgram;
 	GL::Program blitProgram;
 
+	//Gbuffer
     StaticCounter<GLint, GL::Texture> positionUnit;
     StaticCounter<GLint, GL::Texture> normalUnit;
     StaticCounter<GLint, GL::Texture> albedoUnit;
     StaticCounter<GLint, GL::Texture> depthUnit;
+
+	//SSAO
+	StaticCounter<GLint, GL::Texture> ambientUnit;
 	
 	StaticCounter<GLint, GL::Texture> colorUnit;
 

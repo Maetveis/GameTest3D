@@ -10,6 +10,9 @@ GBuffer::GBuffer(unsigned width, unsigned heigth)
     normal.SetStorage(1, GL_RGB16_SNORM, width, heigth);
     albedo.SetStorage(1, GL_RGB8, width, heigth);
     depth.SetStorage(1, GL_DEPTH_COMPONENT24, width, heigth);
+	
+	glTextureParameteri(depth.GetId(), GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	glTextureParameteri(depth.GetId(), GL_TEXTURE_COMPARE_FUNC, GL_LESS);
 
     frameBuffer.AttachTextureLevel(GL_COLOR_ATTACHMENT0, position, 0);
     frameBuffer.AttachTextureLevel(GL_COLOR_ATTACHMENT1, normal, 0);

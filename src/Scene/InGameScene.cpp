@@ -62,8 +62,8 @@ bool InGameScene::LoadData()
     store.AddMaterial(std::move(material0));
 
     IO::BinaryFileReader reader("../assets/alfa.bin");
-    Render::ProtoModel protoModel = Render::AssimpImportFile("../assets/t-34.obj");
-    //reader >> protoModel;
+    Render::ProtoModel protoModel;// = Render::AssimpImportFile("../assets/t-34.obj");
+    reader >> protoModel;
 
     auto modelID = store.UploadModel(protoModel);
 

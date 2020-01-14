@@ -21,6 +21,7 @@ ObjectRenderer::ObjectRenderer(Scene& _scene, RenderStore& _store)
     , store(_store)
     , gBuffer(1000, 1000)
 	, ssaoPass(1000, 1000, 64)
+	, lightPass(gBuffer)
 {
     glClearColor(0., 0., 0., 1.);
 
@@ -80,7 +81,7 @@ void ObjectRenderer::Render()
 	
 	ssaoPass.Execute(gBuffer, scene);
 
-    lightPass.Execute(gBuffer, scene);
+    lightPass.Execute(gBuffer, scene, ssaoPass.GetAOMap());
 }
 
 } //namespace Render

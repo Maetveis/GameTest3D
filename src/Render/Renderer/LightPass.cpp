@@ -9,7 +9,7 @@
 
 namespace Render {
 
-LightPass::LightPass()
+LightPass::LightPass(GBuffer& gbuffer)
 {
 	GL::Shader vert(GL_VERTEX_SHADER);
     if (!vert.FromFile("../shaders/vert-spheres.glsl")) {
@@ -49,6 +49,7 @@ LightPass::LightPass()
 	
 	colorTexture.SetStorage(1, GL_R11F_G11F_B10F, 1000, 1000);
 	frameBuffer.AttachTextureLevel(GL_COLOR_ATTACHMENT0, colorTexture, 0);
+	frameBuffer.AttachTextureLevel(GL_DEPTH_ATTACHMENT, gbuffer.GetDepthTexture(), 0);
 	frameBuffer.SetDrawBuffers({ GL_COLOR_ATTACHMENT0 });
 	
 	GLenum status = frameBuffer.CheckComplete(GL_DRAW_FRAMEBUFFER);
@@ -84,13 +85,11 @@ LightPass::LightPass()
 	colorLocation = blitProgram.GetUniformLocation("colorTexture");
 }
 
-void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
+void LightPass::Execute(const GBuffer& gBuffer, Scene& scene, const GL::Texture2D& ambientTexture)
 {
     frameBuffer.Bind(GL_DRAW_FRAMEBUFFER);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glDisable(GL_DEPTH_TEST);
 
     glEnable(GL_BLEND);
 	glBlendEquation(GL_FUNC_ADD);
@@ -102,7 +101,11 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
     gBuffer.GetDepthTexture().Bind(depthUnit);
 
 	spheresProgram.Use();
+	
+	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_FRONT);
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_FALSE);
 
     GL::SetUniformActive(positionLocation, positionUnit);
     GL::SetUniformActive(normalLocation, normalUnit);
@@ -110,13 +113,20 @@ void LightPass::Execute(const GBuffer& gBuffer, Scene& scene)
     GL::SetUniformActive(depthLocation, depthUnit);
 
     glPatchParameteri(GL_PATCH_VERTICES, 1);
-    glDrawArrays(GL_PATCHES, 0, 100);
+    glDrawArrays(GL_PATCHES, 0, 25);
+	
+	glDisable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
+	
+	ambientTexture.Bind(ambientUnit);
 	
 	ambientProgram.Use();
 	
 	glCullFace(GL_BACK);
 	
 	GL::SetUniformActive(0, positionUnit);
+	GL::SetUniformActive(1, ambientUnit);
 	
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	

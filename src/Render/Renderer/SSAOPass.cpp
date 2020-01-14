@@ -28,7 +28,7 @@ float lerp(float a, float b, float x)
 namespace Render {
 
 SSAOPass::SSAOPass(unsigned width, unsigned height, unsigned sampleCount)
-	: sampleRadius(.7f)
+	: sampleRadius(.05f)
 {
 	ssaoProgram.VsFsProgram("../shaders/screenVert.glsl", "../shaders/ssaoFrag.glsl");
 
@@ -41,7 +41,7 @@ SSAOPass::SSAOPass(unsigned width, unsigned height, unsigned sampleCount)
 
 	projLocation = ssaoProgram.GetUniformLocation("proj");
 	
-	constexpr unsigned RotTextureSize = 16;
+	constexpr unsigned RotTextureSize = 4;
 	
 	aoMap.SetStorage(1, GL_R8, width, height);
 	rotTexture.SetStorage(1, GL_RG16_SNORM, RotTextureSize, RotTextureSize);
@@ -99,28 +99,29 @@ SSAOPass::SSAOPass(unsigned width, unsigned height, unsigned sampleCount)
 
 void SSAOPass::Execute(const GBuffer& gBuffer, Scene& scene)
 {
-    // frameBuffer.Bind(GL_DRAW_FRAMEBUFFER);
+    frameBuffer.Bind(GL_DRAW_FRAMEBUFFER);
 
-    // glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    // gBuffer.GetPositionTexture().Bind(positionUnit);
-    // gBuffer.GetNormalTexture().Bind(normalUnit);
-    // gBuffer.GetDepthTexture().Bind(depthUnit);
+    gBuffer.GetPositionTexture().Bind(positionUnit);
+    gBuffer.GetNormalTexture().Bind(normalUnit);
+    gBuffer.GetDepthTexture().Bind(depthUnit);
 	
-	// rotTexture.Bind(rotTextureUnit);
+	rotTexture.Bind(rotTextureUnit);
 	
-	//More textures
+	glDisable(GL_DEPTH_TEST);
 
-	// ssaoProgram.Use();
+	ssaoProgram.Use();
 
-    // GL::SetUniformActive(positionLocation, positionUnit);
-    // GL::SetUniformActive(normalLocation, normalUnit);
-    // GL::SetUniformActive(depthLocation, depthUnit);
-	// GL::SetUniformActive(rotTextureLocation, rotTextureUnit);
+    GL::SetUniformActive(positionLocation, positionUnit);
+    GL::SetUniformActive(normalLocation, normalUnit);
+    GL::SetUniformActive(depthLocation, depthUnit);
+	GL::SetUniformActive(rotTextureLocation, rotTextureUnit);
 	
-	// GL::SetUniformActive(sampleRadiusLocation, sampleRadius);
+	GL::SetUniformActive(sampleRadiusLocation, sampleRadius);
+	GL::SetUniformActive(projLocation, scene.GetProj());
 	
-	//Execute pass here
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void SSAOPass::GenerateKernel(unsigned sampleCount)

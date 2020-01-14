@@ -10,6 +10,6 @@ out VertexData
 
 void main()
 {
-    gl_Position = vec4(Triangle[gl_VertexID], 1, 1);
+    gl_Position = vec4(Triangle[gl_VertexID], 0, 1);
     uv = UV[gl_VertexID];
 }
