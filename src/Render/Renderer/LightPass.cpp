@@ -1,6 +1,6 @@
 #include "LightPass.hpp"
 
-#include "Gbuffer.hpp"
+#include "GBuffer.hpp"
 #include "Render/Scene/Scene.hpp"
 
 #include "Library/GL/SetUniform.hpp"

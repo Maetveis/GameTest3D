@@ -8,7 +8,7 @@ in VertexData
 out float fs_ambient;
 
 layout(std140) uniform KernelBlock {
-	vec3 samples[64];
+	vec3 samples[16];
 };
 
 uniform sampler2D positionTexture;

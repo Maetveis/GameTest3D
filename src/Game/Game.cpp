@@ -32,7 +32,7 @@ void Game::Run()
 			HandleEvents();
 			Update();
 			Render();
-			DelayFrameTime(timer.GetFrameStart(), targetFPS);
+			//DelayFrameTime(timer.GetFrameStart(), targetFPS);
 		}
 	}
 	Destroy();

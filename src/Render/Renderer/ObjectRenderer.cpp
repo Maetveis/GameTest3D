@@ -20,7 +20,7 @@ ObjectRenderer::ObjectRenderer(Scene& _scene, RenderStore& _store)
     : scene(_scene)
     , store(_store)
     , gBuffer(1000, 1000)
-	, ssaoPass(1000, 1000, 64)
+	, ssaoPass(1000, 1000, 16)
 	, lightPass(gBuffer)
 {
     glClearColor(0., 0., 0., 1.);
